@@ -12,12 +12,17 @@ function safeNumber(value, fallback = 4) {
   return Number.isFinite(value) ? value : fallback
 }
 
+function firstList(primary, fallback) {
+  const primaryList = safeArray(primary)
+  return primaryList.length ? primaryList : safeArray(fallback)
+}
+
 function normalizeEvent(event) {
   const why = safeText(event.why, safeText(event.whyWheeler, 'Review this event with the Wheeler advisor before choosing it.'))
   const firstAction = safeText(event.firstAction, safeText(event.firstActionThisWeek, 'Read the event guideline and ask the advisor what to verify first.'))
-  const weekly = safeArray(event.weekly.length ? event.weekly : event.weeklyTraining)
-  const evidence = safeArray(event.evidence.length ? event.evidence : event.evidenceToCollect)
-  const mistakes = safeArray(event.mistakes.length ? event.mistakes : event.commonMistakes)
+  const weekly = firstList(event.weekly, event.weeklyTraining)
+  const evidence = firstList(event.evidence, event.evidenceToCollect)
+  const mistakes = firstList(event.mistakes, event.commonMistakes)
 
   return {
     ...event,
