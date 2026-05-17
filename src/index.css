@@ -1,1 +1,51 @@
 @import "tailwindcss";
+
+@layer base {
+  button,
+  a[href],
+  select,
+  input[type='range'],
+  [role='button'] {
+    cursor: pointer;
+  }
+
+  button:focus-visible,
+  a[href]:focus-visible,
+  select:focus-visible,
+  input:focus-visible,
+  [role='button']:focus-visible {
+    outline: 2px solid #5eead4;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .bg-slate-950 h1 {
+    color: #ffffff;
+  }
+
+  .bg-slate-950 h1 + p {
+    color: #f1f5f9;
+    font-weight: 500;
+  }
+
+  button,
+  a[href],
+  select {
+    transition-property: color, background-color, border-color, box-shadow, transform, filter;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
+  }
+
+  button:hover,
+  a[href]:hover,
+  select:hover {
+    box-shadow: 0 0 0 1px rgba(20, 184, 166, 0.35);
+    filter: brightness(0.98);
+  }
+
+  button:active,
+  a[href]:active {
+    transform: translateY(1px);
+  }
+}
