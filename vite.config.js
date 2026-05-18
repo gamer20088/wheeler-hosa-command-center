@@ -76,6 +76,28 @@ function addFinalEventBatch() {
   }
 }
 
+function cleanupProofNavigation() {
+  return {
+    name: 'cleanup-proof-navigation',
+    transform(code, id) {
+      const normalizedId = normalizePath(id)
+      if (!normalizedId.endsWith('/src/StudentPortal.jsx')) return null
+
+      let updated = code
+        .replace(
+          "const NAV = [['home', 'Home', Home], ['finder', 'Event Finder', Target], ['library', 'Event Library', ClipboardList], ['plan', 'My Plan', CalendarCheck], ['proof', 'Proof Tracker', ClipboardCheck], ['guide', 'Plain English Guide', BookOpen], ['officers', 'Officer Tools', ShieldCheck]]",
+          "const NAV = [['home', 'Home', Home], ['finder', 'Event Finder', Target], ['library', 'Event Library', ClipboardList], ['proof', 'Proof Tracker', ClipboardCheck], ['guide', 'Plain English Guide', BookOpen], ['plan', 'My Plan', CalendarCheck], ['officers', 'Officer Tools', ShieldCheck]]",
+        )
+        .replace(
+          /function OfficerTools\(\) \{[\s\S]*?\n\}\n\nexport default function StudentPortal/,
+          'function OfficerTools() { return <ProofOfficerWorkflow /> }\n\nexport default function StudentPortal',
+        )
+
+      return updated === code ? null : { code: updated, map: null }
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [addFinalEventBatch(), react(), tailwindcss()],
+  plugins: [addFinalEventBatch(), cleanupProofNavigation(), react(), tailwindcss()],
 })
