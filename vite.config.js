@@ -98,6 +98,28 @@ function cleanupProofNavigation() {
   }
 }
 
+function compactMyPlanDashboard() {
+  return {
+    name: 'compact-my-plan-dashboard',
+    transform(code, id) {
+      const normalizedId = normalizePath(id)
+      if (!normalizedId.endsWith('/src/StudentPortal.jsx')) return null
+
+      let updated = code
+        .replace(
+          "import { OfficerFeedbackNextStep, PlanProcessSummary, ReadinessLevels, StartHereSection, readinessPlanText } from './readinessFlow.jsx'\n",
+          "import { OfficerFeedbackNextStep, PlanProcessSummary, ReadinessLevels, StartHereSection, readinessPlanText } from './readinessFlow.jsx'\nimport { CompactMyPlan } from './compactMyPlan.jsx'\n",
+        )
+        .replace(
+          "{activeTab === 'plan' && <MyPlan selectedEvent={selectedEvent} backupEvent={backupEvent} setTab={setActiveTab} />}",
+          "{activeTab === 'plan' && <CompactMyPlan selectedEvent={selectedEvent} backupEvent={backupEvent} setTab={setActiveTab} />}",
+        )
+
+      return updated === code ? null : { code: updated, map: null }
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [addFinalEventBatch(), cleanupProofNavigation(), react(), tailwindcss()],
+  plugins: [addFinalEventBatch(), cleanupProofNavigation(), compactMyPlanDashboard(), react(), tailwindcss()],
 })
