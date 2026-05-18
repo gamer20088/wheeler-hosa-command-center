@@ -1,9 +1,10 @@
-import { AlertTriangle, CalendarCheck, CheckCircle2, ClipboardCheck, Copy, Download, FileText } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, ClipboardCheck, Copy, Download } from 'lucide-react'
 import { getStudentFriendlyGuide } from './babyEventGuide.jsx'
 import { getProofExamples } from './proofTracker.jsx'
 import { READINESS_LEVELS } from './readinessFlow.jsx'
 
 const SLC_WARNING = 'This portal explains events in student-friendly language. Verify final Georgia SLC requirements with the Wheeler advisor and Georgia HOSA.'
+const COMPACT_READINESS_LABELS = ['Exploring', 'Event selected', 'First proof', 'Weekly practice', 'Officer reviewed', 'Mock round', 'SLC-ready']
 
 function safeArray(value) {
   return Array.isArray(value) ? value : []
@@ -45,10 +46,11 @@ function SummaryTile({ label, children, className = '' }) {
 }
 
 function CompactReadiness() {
-  return <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">{READINESS_LEVELS.map(([level], index) => {
-    const label = level.replace(/^Level \d+:\s*/, '')
+  return <div className="flex flex-wrap items-center gap-2">{COMPACT_READINESS_LABELS.flatMap((label, index) => {
     const active = index <= 1
-    return <div key={level} className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-black ring-1 ${active ? 'bg-teal-50 text-teal-900 ring-teal-200' : 'bg-slate-50 text-slate-600 ring-slate-200'}`}><CheckCircle2 size={15} className={active ? 'text-teal-600' : 'text-slate-400'} /><span>{label}</span></div>
+    const step = <span key={label} className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-black ring-1 sm:text-sm ${active ? 'bg-teal-50 text-teal-900 ring-teal-200' : 'bg-slate-50 text-slate-600 ring-slate-200'}`}><CheckCircle2 size={14} className={active ? 'text-teal-600' : 'text-slate-400'} />{label}</span>
+    const arrow = index < COMPACT_READINESS_LABELS.length - 1 ? <span key={`${label}-arrow`} className="text-sm font-black text-slate-300">→</span> : null
+    return arrow ? [step, arrow] : [step]
   })}</div>
 }
 
