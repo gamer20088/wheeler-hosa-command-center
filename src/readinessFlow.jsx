@@ -1,5 +1,5 @@
 import { CalendarCheck, CheckCircle2, ClipboardCheck, FileText, MessageSquare, Target } from 'lucide-react'
-import { PROOF_LINKS } from './proofTracker.jsx'
+import { PORTAL_LINKS } from './portalConfig.js'
 
 const START_STEPS = [
   ['Take the Event Finder', 'Answer the quick quiz so the portal can suggest realistic events.'],
@@ -68,5 +68,5 @@ export function OfficerFeedbackNextStep({ setTab }) {
 }
 
 export function ProofActionBar({ setTab }) {
-  return <div className="mt-5 flex flex-col gap-2 sm:flex-row"><FlowButton onClick={() => setTab('proof')} icon={ClipboardCheck}>Go to Proof Tracker</FlowButton><FlowButton href={PROOF_LINKS.weeklyProofForm} icon={FileText}>Submit Weekly Proof</FlowButton></div>
+  return <div className="mt-5 flex flex-col gap-2 sm:flex-row"><FlowButton onClick={() => setTab('proof')} icon={ClipboardCheck}>Go to Proof Tracker</FlowButton><FlowButton href={PORTAL_LINKS.weeklyProofForm} icon={FileText}>Submit Weekly Proof</FlowButton></div>
 }
