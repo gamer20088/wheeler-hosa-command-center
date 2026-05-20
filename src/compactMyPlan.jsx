@@ -40,13 +40,13 @@ function Card({ children, className = '' }) {
 
 function ActionButton({ children, onClick, icon: Icon, variant = 'primary' }) {
   const styles = variant === 'light'
-    ? 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-teal-50 hover:ring-teal-300'
-    : 'bg-teal-500 text-white hover:bg-teal-600'
-  return <button type="button" onClick={onClick} className={`inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-teal-300 ${styles}`}>{Icon && <Icon size={16} />}{children}</button>
+    ? 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-blue-50 hover:ring-blue-300'
+    : 'bg-blue-950 text-white hover:bg-blue-900'
+  return <button type="button" onClick={onClick} className={`inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300 ${styles}`}>{Icon && <Icon size={16} />}{children}</button>
 }
 
 function BulletList({ items }) {
-  return <ul className="space-y-2">{safeArray(items).map((item) => <li key={item} className="flex gap-2 text-sm leading-6 text-slate-700"><CheckCircle2 size={15} className="mt-1 shrink-0 text-teal-500" /><span>{item}</span></li>)}</ul>
+  return <ul className="space-y-2">{safeArray(items).map((item) => <li key={item} className="flex gap-2 text-sm leading-6 text-slate-700"><CheckCircle2 size={15} className="mt-1 shrink-0 text-blue-900" /><span>{item}</span></li>)}</ul>
 }
 
 function SummaryTile({ label, children, className = '' }) {
@@ -56,7 +56,7 @@ function SummaryTile({ label, children, className = '' }) {
 function CompactReadiness() {
   return <div className="flex flex-wrap items-center gap-2">{COMPACT_READINESS_LABELS.flatMap((label, index) => {
     const active = index <= 1
-    const step = <span key={label} className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-black ring-1 sm:text-sm ${active ? 'bg-teal-50 text-teal-900 ring-teal-200' : 'bg-slate-50 text-slate-600 ring-slate-200'}`}><CheckCircle2 size={14} className={active ? 'text-teal-600' : 'text-slate-400'} />{label}</span>
+    const step = <span key={label} className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-black ring-1 sm:text-sm ${active ? 'bg-blue-50 text-blue-950 ring-blue-200' : 'bg-slate-50 text-slate-600 ring-slate-200'}`}><CheckCircle2 size={14} className={active ? 'text-blue-900' : 'text-slate-400'} />{label}</span>
     const arrow = index < COMPACT_READINESS_LABELS.length - 1 ? <span key={`${label}-arrow`} className="text-sm font-black text-slate-300">-&gt;</span> : null
     return arrow ? [step, arrow] : [step]
   })}</div>
@@ -64,7 +64,7 @@ function CompactReadiness() {
 
 function SectionCard({ section, active, onClick }) {
   const Icon = section.icon
-  return <button type="button" aria-pressed={active} onClick={onClick} className={`flex min-h-24 cursor-pointer gap-3 rounded-2xl p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-teal-300 sm:p-4 ${active ? 'border-l-4 border-rose-800 bg-sky-50 text-slate-950 ring-2 ring-teal-300' : 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-teal-50 hover:ring-teal-300'}`}><span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${active ? 'bg-blue-950 text-white' : 'bg-teal-100 text-teal-700'}`}><Icon size={19} /></span><span><span className="block text-sm font-black">{section.title}</span><span className="mt-1 block text-sm leading-5 text-slate-600">{section.description}</span></span></button>
+  return <button type="button" aria-pressed={active} onClick={onClick} className={`flex min-h-24 cursor-pointer gap-3 rounded-2xl p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-blue-300 sm:p-4 ${active ? 'border-l-4 border-rose-800 bg-sky-50 text-slate-950 ring-2 ring-blue-300' : 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-blue-50 hover:ring-blue-300'}`}><span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${active ? 'bg-blue-950 text-white' : 'bg-blue-50 text-blue-950'}`}><Icon size={19} /></span><span><span className="block text-sm font-black">{section.title}</span><span className="mt-1 block text-sm leading-5 text-slate-600">{section.description}</span></span></button>
 }
 
 function SectionPanel({ activeSection, event, guide }) {
@@ -80,7 +80,7 @@ function SectionPanel({ activeSection, event, guide }) {
   if (activeSection === 'mistakes') return <BulletList items={event.mistakes} />
   if (activeSection === 'feedback') return <p className="text-sm font-bold leading-6 text-slate-700">After submitting weekly proof, ask an officer to review it and mark your next action before the next meeting.</p>
 
-  return <div className="space-y-4"><p className="text-sm leading-6 text-slate-700">{safeText(guide.babySummary, 'This event summary is still being prepared.')}</p><div><p className="text-xs font-black uppercase tracking-wide text-teal-700">What you actually do</p><div className="mt-2"><BulletList items={guide.whatYouActuallyDo} /></div></div></div>
+  return <div className="space-y-4"><p className="text-sm leading-6 text-slate-700">{safeText(guide.babySummary, 'This event summary is still being prepared.')}</p><div><p className="text-xs font-black uppercase tracking-wide text-blue-950">What you actually do</p><div className="mt-2"><BulletList items={guide.whatYouActuallyDo} /></div></div></div>
 }
 
 function buildPlanText(event, guide, proofItems) {
@@ -125,5 +125,5 @@ export function CompactMyPlan({ selectedEvent, setTab }) {
     URL.revokeObjectURL(url)
   }
 
-  return <div className="space-y-4"><Card className="space-y-4"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-xs font-black uppercase tracking-wide text-teal-700">Selected Event</p><h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950">{safeText(event.name, 'Choose an event')}</h2></div><div className="flex flex-col gap-2 sm:flex-row"><ActionButton onClick={() => setTab('proof')} icon={ClipboardCheck}>Go to Proof Tracker</ActionButton><ActionButton onClick={copyPlan} icon={Copy} variant="light">Copy Plan</ActionButton><ActionButton onClick={downloadPlan} icon={Download} variant="light">Download Plan</ActionButton></div></div><SummaryTile label="This Week's Action">{safeText(event.firstAction)}</SummaryTile><div className="grid gap-3 lg:grid-cols-[0.8fr_1.2fr]"><SummaryTile label="Weekly Proof You Should Submit"><BulletList items={proofItems.slice(0, 3)} /></SummaryTile><SummaryTile label="Compact Readiness Progress"><CompactReadiness /><p className="mt-2 text-xs font-bold leading-5 text-slate-500">Google Forms will verify proof and officer review once links are added.</p></SummaryTile></div></Card><Card><div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-black uppercase tracking-wide text-teal-700">What do you need next?</p><h3 className="mt-1 text-xl font-black tracking-tight text-slate-950">Choose a section to review</h3></div><p className="text-sm font-bold text-slate-500">Selected: {activeDefinition.title}</p></div><div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">{PLAN_SECTIONS.map((section) => <SectionCard key={section.id} section={section} active={section.id === activeSection} onClick={() => setActiveSection(section.id)} />)}</div><section className="mt-4 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200"><div className="mb-3 flex items-center gap-2"><ActiveIcon size={18} className="text-teal-600" /><h4 className="text-base font-black text-slate-950">{activeDefinition.title}</h4></div><SectionPanel activeSection={activeSection} event={event} guide={guide} /></section></Card></div>
+  return <div className="space-y-4"><Card className="space-y-4"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-xs font-black uppercase tracking-wide text-blue-950">Selected Event</p><h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950">{safeText(event.name, 'Choose an event')}</h2></div><div className="flex flex-col gap-2 sm:flex-row"><ActionButton onClick={() => setTab('proof')} icon={ClipboardCheck}>Go to Proof Tracker</ActionButton><ActionButton onClick={copyPlan} icon={Copy} variant="light">Copy Plan</ActionButton><ActionButton onClick={downloadPlan} icon={Download} variant="light">Download Plan</ActionButton></div></div><SummaryTile label="This Week's Action">{safeText(event.firstAction)}</SummaryTile><div className="grid gap-3 lg:grid-cols-[0.8fr_1.2fr]"><SummaryTile label="Weekly Proof You Should Submit"><BulletList items={proofItems.slice(0, 3)} /></SummaryTile><SummaryTile label="Compact Readiness Progress"><CompactReadiness /><p className="mt-2 text-xs font-bold leading-5 text-slate-500">Google Forms will verify proof and officer review once links are added.</p></SummaryTile></div></Card><Card><div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-black uppercase tracking-wide text-blue-950">What do you need next?</p><h3 className="mt-1 text-xl font-black tracking-tight text-slate-950">Choose a section to review</h3></div><p className="text-sm font-bold text-slate-500">Selected: {activeDefinition.title}</p></div><div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">{PLAN_SECTIONS.map((section) => <SectionCard key={section.id} section={section} active={section.id === activeSection} onClick={() => setActiveSection(section.id)} />)}</div><section className="mt-4 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200"><div className="mb-3 flex items-center gap-2"><ActiveIcon size={18} className="text-blue-900" /><h4 className="text-base font-black text-slate-950">{activeDefinition.title}</h4></div><SectionPanel activeSection={activeSection} event={event} guide={guide} /></section></Card></div>
 }
