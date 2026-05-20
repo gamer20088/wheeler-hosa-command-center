@@ -40,9 +40,9 @@ function Card({ children, className = '' }) {
 
 function ActionButton({ children, onClick, icon: Icon, variant = 'primary' }) {
   const styles = variant === 'light'
-    ? 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-rose-200'
-    : 'bg-blue-950 text-white hover:bg-slate-900'
-  return <button type="button" onClick={onClick} className={`inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-rose-200 ${styles}`}>{Icon && <Icon size={16} />}{children}</button>
+    ? 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-teal-50 hover:ring-teal-300'
+    : 'bg-teal-500 text-white hover:bg-teal-600'
+  return <button type="button" onClick={onClick} className={`inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-teal-300 ${styles}`}>{Icon && <Icon size={16} />}{children}</button>
 }
 
 function BulletList({ items }) {
@@ -56,7 +56,7 @@ function SummaryTile({ label, children, className = '' }) {
 function CompactReadiness() {
   return <div className="flex flex-wrap items-center gap-2">{COMPACT_READINESS_LABELS.flatMap((label, index) => {
     const active = index <= 1
-    const step = <span key={label} className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-black ring-1 sm:text-sm ${active ? 'bg-rose-50 text-rose-900 ring-rose-200' : 'bg-slate-50 text-slate-600 ring-slate-200'}`}><CheckCircle2 size={14} className={active ? 'text-rose-900' : 'text-slate-400'} />{label}</span>
+    const step = <span key={label} className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-black ring-1 sm:text-sm ${active ? 'bg-teal-50 text-teal-900 ring-teal-200' : 'bg-slate-50 text-slate-600 ring-slate-200'}`}><CheckCircle2 size={14} className={active ? 'text-teal-600' : 'text-slate-400'} />{label}</span>
     const arrow = index < COMPACT_READINESS_LABELS.length - 1 ? <span key={`${label}-arrow`} className="text-sm font-black text-slate-300">-&gt;</span> : null
     return arrow ? [step, arrow] : [step]
   })}</div>
@@ -64,7 +64,7 @@ function CompactReadiness() {
 
 function SectionCard({ section, active, onClick }) {
   const Icon = section.icon
-  return <button type="button" aria-pressed={active} onClick={onClick} className={`flex min-h-24 cursor-pointer gap-3 rounded-2xl p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-rose-200 sm:p-4 ${active ? 'border-l-4 border-rose-900 bg-white text-slate-950 ring-2 ring-rose-900' : 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-rose-200'}`}><span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${active ? 'bg-rose-900 text-white' : 'bg-teal-100 text-teal-700'}`}><Icon size={19} /></span><span><span className="block text-sm font-black">{section.title}</span><span className="mt-1 block text-sm leading-5 text-slate-600">{section.description}</span></span></button>
+  return <button type="button" aria-pressed={active} onClick={onClick} className={`flex min-h-24 cursor-pointer gap-3 rounded-2xl p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-teal-300 sm:p-4 ${active ? 'border-l-4 border-rose-800 bg-sky-50 text-slate-950 ring-2 ring-teal-300' : 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-teal-50 hover:ring-teal-300'}`}><span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${active ? 'bg-blue-950 text-white' : 'bg-teal-100 text-teal-700'}`}><Icon size={19} /></span><span><span className="block text-sm font-black">{section.title}</span><span className="mt-1 block text-sm leading-5 text-slate-600">{section.description}</span></span></button>
 }
 
 function SectionPanel({ activeSection, event, guide }) {
