@@ -38,10 +38,10 @@ function Card({ children, className = '' }) {
   return <section className={`rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5 ${className}`}>{children}</section>
 }
 
-function ActionButton({ children, onClick, icon: Icon, variant = 'dark' }) {
+function ActionButton({ children, onClick, icon: Icon, variant = 'primary' }) {
   const styles = variant === 'light'
     ? 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-teal-300'
-    : 'bg-slate-950 text-white hover:bg-slate-800'
+    : 'bg-teal-500 text-white hover:bg-teal-600'
   return <button type="button" onClick={onClick} className={`inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-teal-300 ${styles}`}>{Icon && <Icon size={16} />}{children}</button>
 }
 
@@ -64,7 +64,7 @@ function CompactReadiness() {
 
 function SectionCard({ section, active, onClick }) {
   const Icon = section.icon
-  return <button type="button" aria-pressed={active} onClick={onClick} className={`flex min-h-28 cursor-pointer gap-3 rounded-2xl p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-teal-300 ${active ? 'bg-slate-950 text-white ring-2 ring-slate-950' : 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-teal-50 hover:ring-teal-300'}`}><span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${active ? 'bg-teal-400 text-slate-950' : 'bg-teal-100 text-teal-700'}`}><Icon size={19} /></span><span><span className="block text-sm font-black">{section.title}</span><span className={`mt-1 block text-sm leading-5 ${active ? 'text-slate-200' : 'text-slate-600'}`}>{section.description}</span></span></button>
+  return <button type="button" aria-pressed={active} onClick={onClick} className={`flex min-h-24 cursor-pointer gap-3 rounded-2xl p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-teal-300 sm:p-4 ${active ? 'bg-slate-950 text-white ring-2 ring-slate-950' : 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-teal-50 hover:ring-teal-300'}`}><span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${active ? 'bg-teal-400 text-slate-950' : 'bg-teal-100 text-teal-700'}`}><Icon size={19} /></span><span><span className="block text-sm font-black">{section.title}</span><span className={`mt-1 block text-sm leading-5 ${active ? 'text-slate-200' : 'text-slate-600'}`}>{section.description}</span></span></button>
 }
 
 function SectionPanel({ activeSection, event, guide }) {
