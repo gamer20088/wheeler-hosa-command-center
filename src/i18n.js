@@ -42,6 +42,7 @@ const uiTextTranslations = {
   'Download Plan': 'Descargar plan',
   'Dress code': 'Codigo de vestimenta',
   'English': 'English',
+  'Experienced': 'Con experiencia',
   'Event Finder': 'Buscador de eventos',
   'Event Interest Form': 'Formulario de interes de eventos',
   'Event Library': 'Biblioteca de eventos',
@@ -50,7 +51,6 @@ const uiTextTranslations = {
   'Evidence examples': 'Ejemplos de evidencia',
   'Evidence to Collect': 'Evidencia para guardar',
   'Evidence to collect': 'Evidencia para guardar',
-  'Experienced': 'Con experiencia',
   'Find your best event': 'Encuentra tu mejor evento',
   'First action': 'Primera accion',
   'Format': 'Formato',
@@ -237,6 +237,131 @@ const uiTextTranslations = {
   'Writing': 'Escritura',
   'Your Event in Plain English': 'Tu evento en palabras simples',
   'Your path to Georgia SLC-ready': 'Tu camino para estar listo para el SLC de Georgia',
+  '0/120 characters': '0/120 caracteres',
+  '27 target events': '27 eventos objetivo',
+  'About': 'Informacion',
+  'Answer honestly. You can change this later.': 'Responde con honestidad. Puedes cambiar esto despues.',
+  'Back': 'Atras',
+  'Complete one timed response.': 'Completa una respuesta con tiempo.',
+  'Exploring': 'Explorando',
+  'Event selected': 'Evento seleccionado',
+  'Experience level': 'Nivel de experiencia',
+  'First proof': 'Primera evidencia',
+  'Format preference': 'Preferencia de formato',
+  'Forms, reminders, and calendar.': 'Formularios, recordatorios y calendario.',
+  'Grade 9': 'Grado 9',
+  'Grade 10': 'Grado 10',
+  'Grade 11': 'Grado 11',
+  'Grade 12': 'Grado 12',
+  'High': 'Alta',
+  'High commitment': 'Alto compromiso',
+  'How matches work': 'Como funcionan las recomendaciones',
+  'Low lift': 'Mas ligero',
+  'Low to Medium': 'Baja a media',
+  'Medium': 'Media',
+  'Medium to High': 'Media a alta',
+  'Mock round': 'Ronda de practica',
+  'Next': 'Siguiente',
+  'No local practice saved yet. Save one after practicing.': 'Todavia no hay practica local guardada. Guarda una despues de practicar.',
+  'Only for locked-in teams': 'Solo para equipos muy comprometidos',
+  'Optional note': 'Nota opcional',
+  'Proof code and safety note.': 'Codigo de evidencia y nota de seguridad.',
+  'Read one health policy article and summarize it.': 'Lee un articulo sobre politica de salud y resumelo.',
+  'Reliability for team events': 'Responsabilidad para eventos en equipo',
+  'Result': 'Resultado',
+  'SLC-ready': 'Listo para SLC',
+  'Scored factors': 'Factores evaluados',
+  'Selected:': 'Seleccionado:',
+  'Serious': 'Serio',
+  'Signs you are actually prepared.': 'Senales de que realmente estas preparado.',
+  'Still no local practice. Save one after you practice.': 'Todavia no hay practica local. Guarda una despues de practicar.',
+  'Strengths': 'Fortalezas',
+  'Strengths you selected': 'Fortalezas que seleccionaste',
+  'Take the quick finder and compare realistic matches.': 'Completa el buscador rapido y compara opciones realistas.',
+  'The event in simple words.': 'El evento en palabras simples.',
+  'The finder scores events by fit, not by popularity.': 'El buscador califica eventos por ajuste, no por popularidad.',
+  'Test, upload, presentation, and SLC checks.': 'Examen, entrega, presentacion y verificaciones de SLC.',
+  'Time practice and save notes.': 'Mide tu practica y guarda notas.',
+  'Track practice on this device before official Google proof links are added.': 'Registra practica en este dispositivo antes de agregar enlaces oficiales de Google.',
+  'Use the guideline, weekly practice, and advisor feedback to figure out exactly what competition expects.': 'Usa la guia, la practica semanal y los comentarios del asesor para entender exactamente lo que espera la competencia.',
+  'Weekly practice': 'Practica semanal',
+  'Weekly prep time': 'Tiempo semanal de preparacion',
+  'What counts as proof.': 'Que cuenta como evidencia.',
+  'What did you practice?': 'Que practicaste?',
+  'strength.Writing & Policy': 'Escritura y politica',
+  'Writing & Policy': 'Escritura y politica',
+  'strength.Speaking & Presentation': 'Oratoria y presentacion',
+  'Speaking & Presentation': 'Oratoria y presentacion',
+  'strength.Science & Health': 'Ciencias y salud',
+  'Science & Health': 'Ciencias y salud',
+  'strength.Math & Accuracy': 'Matematicas y precision',
+  'Math & Accuracy': 'Matematicas y precision',
+  'strength.Data & Technology': 'Datos y tecnologia',
+  'Data & Technology': 'Datos y tecnologia',
+  'strength.Psychology & Wellness': 'Psicologia y bienestar',
+  'Psychology & Wellness': 'Psicologia y bienestar',
+  'strength.Research & Reading': 'Investigacion y lectura',
+  'Research & Reading': 'Investigacion y lectura',
+  'strength.Design & Creativity': 'Diseno y creatividad',
+  'Design & Creativity': 'Diseno y creatividad',
+  'strength.Public Health & Outreach': 'Salud publica y alcance',
+  'Public Health & Outreach': 'Salud publica y alcance',
+  'strength.Teamwork & Leadership': 'Trabajo en equipo y liderazgo',
+  'Teamwork & Leadership': 'Trabajo en equipo y liderazgo',
+  'strength.Memorization & Test Taking': 'Memorizacion y examenes',
+  'Memorization & Test Taking': 'Memorizacion y examenes',
+  'strength.Independent Work': 'Trabajo independiente',
+  'Independent Work': 'Trabajo independiente',
+  'strength.New Member Friendly': 'Amigable para nuevos miembros',
+  'New Member Friendly': 'Amigable para nuevos miembros',
+  'What grade are you in?': 'En que grado estas?',
+  'What to ask after proof review.': 'Que preguntar despues de la revision de evidencia.',
+  'What to confirm before competition.': 'Lo que debes confirmar antes de competir.',
+  'What you must handle.': 'Lo que debes manejar.',
+  'Write one 30-minute response on a teen health issue using claim, evidence, counterpoint, recommendation, and closing.': 'Escribe una respuesta de 30 minutos sobre un problema de salud juvenil usando argumento, evidencia, contraargumento, recomendacion y cierre.',
+  'Extemporaneous Writing is mainly about on-site writing. Your job is to prepare the right work, practice the competition format, and verify Georgia SLC details early.': 'Extemporaneous Writing se trata principalmente de escritura en el sitio. Tu trabajo es preparar el material correcto, practicar el formato de competencia y verificar temprano los detalles del SLC de Georgia.',
+  'A strong Wheeler target for students who can explain health issues clearly under time pressure.': 'Una buena meta de Wheeler para estudiantes que pueden explicar temas de salud con claridad y bajo tiempo.',
+  'A clear starter event for new members who can practice flashcards consistently.': 'Un buen evento inicial para miembros nuevos que pueden practicar tarjetas de estudio con constancia.',
+  'A good fit for students who like psychology, health terms, and applied scenarios.': 'Buena opcion para estudiantes que disfrutan psicologia, terminos de salud y situaciones aplicadas.',
+  'A strong STEM lane for students who are careful with units and calculations.': 'Una ruta STEM fuerte para estudiantes cuidadosos con unidades y calculos.',
+  'A healthcare plus technology option for students who like systems, privacy, and data.': 'Una opcion de salud y tecnologia para estudiantes que disfrutan sistemas, privacidad y datos.',
+  'A distinctive global health event for students who can connect causes, consequences, and interventions.': 'Un evento distintivo de salud global para estudiantes que conectan causas, consecuencias e intervenciones.',
+  'A trainable speaking lane for students who will practice, record, and accept feedback.': 'Una ruta de presentacion que se puede entrenar si practicas, grabas y aceptas comentarios.',
+  'A flagship team event for students who can teach a real audience and show learning evidence.': 'Un evento principal de equipo para estudiantes que pueden ensenar a una audiencia real y mostrar evidencia de aprendizaje.',
+  'A high-impact chapter visibility event with campaign planning, outreach, and measurable proof.': 'Un evento de alto impacto para visibilidad del capitulo con plan de campana, alcance y evidencia medible.',
+  'A high-ceiling team event for students who can combine research, data, video, and presentation.': 'Un evento de equipo con mucho potencial para estudiantes que combinan investigacion, datos, video y presentacion.',
+  'A relevant school impact event when handled respectfully with resources and evidence.': 'Un evento relevante de impacto escolar cuando se maneja con respeto, recursos y evidencia.',
+  'A media lane for teams that can write, film, edit, and meet upload deadlines.': 'Una ruta de medios para equipos que pueden escribir, grabar, editar y cumplir fechas de entrega.',
+  'A STEM innovation showcase for students who can solve a real healthcare problem and explain feasibility.': 'Una muestra de innovacion STEM para estudiantes que pueden resolver un problema real de salud y explicar si es viable.',
+  'A serious quiz team path for students who can meet weekly and split topic ownership.': 'Una ruta seria de equipo de preguntas para estudiantes que pueden reunirse semanalmente y dividir temas.',
+  'A debate and ethics lane for students who can argue with evidence and stay calm under pressure.': 'Una ruta de debate y etica para estudiantes que argumentan con evidencia y mantienen la calma bajo presion.',
+  'A stretch event for disciplined STEM pairs who will practice cases and divide topics.': 'Un evento retador para parejas STEM disciplinadas que practicaran casos y dividiran temas.',
+  'A rookie-friendly event for students who need a structured first competition.': 'Un evento amigable para principiantes que necesitan una primera competencia estructurada.',
+  'A strong fit for students who can turn research into a clean poster and explain it clearly.': 'Buena opcion para estudiantes que pueden convertir investigacion en un poster claro y explicarlo bien.',
+  'A good lane for strong writers who can defend a health position out loud.': 'Buena ruta para escritores fuertes que pueden defender una postura de salud en voz alta.',
+  'A focused test event for students who can read steadily and remember important details.': 'Un evento de examen enfocado para estudiantes que leen con constancia y recuerdan detalles importantes.',
+  'A practical recognition exam for students who already follow healthcare news and can review weekly.': 'Un examen de reconocimiento practico para estudiantes que ya siguen noticias de salud y pueden repasar cada semana.',
+  'A strong event for students who can think through rules, rights, responsibilities, and ethical choices.': 'Un evento fuerte para estudiantes que piensan en reglas, derechos, responsabilidades y decisiones eticas.',
+  'A strong fit for students who like outbreaks, disease patterns, and evidence-based thinking.': 'Buena opcion para estudiantes que disfrutan brotes, patrones de enfermedad y pensamiento basado en evidencia.',
+  'A useful science test event for students interested in wellness, diet, and health education.': 'Un examen de ciencias util para estudiantes interesados en bienestar, dieta y educacion de salud.',
+  'A good event for students who like psychology, lifespan development, and health across ages.': 'Buen evento para estudiantes que disfrutan psicologia, desarrollo humano y salud a traves de las edades.',
+  'A good fit for students interested in how hospitals, clinics, teams, money, and policies work together.': 'Buena opcion para estudiantes interesados en como hospitales, clinicas, equipos, dinero y politicas trabajan juntos.',
+  'A creative career event for students who can research a health career and tell the story visually.': 'Un evento creativo de carreras para estudiantes que investigan una carrera de salud y cuentan la historia visualmente.',
+  'Asked for officer feedback': 'Pedi comentarios de un oficial',
+  'Browse events, then open a quick overview when one looks interesting.': 'Explora eventos y abre un resumen rapido cuando uno te interese.',
+  'First proof submitted': 'Primera evidencia entregada',
+  'Officer reviewed': 'Revisado por oficial',
+  'Open your weekly plan so you know what to do first.': 'Abre tu plan semanal para saber que hacer primero.',
+  'Picked main event': 'Escogi evento principal',
+  'Problems to avoid early.': 'Problemas que debes evitar desde temprano.',
+  'Proof to save as you prepare.': 'Evidencia para guardar mientras te preparas.',
+  'Show one piece of evidence that you practiced.': 'Muestra una evidencia de que practicaste.',
+  'Weekly practice started': 'Practica semanal iniciada',
+  'What did you practice?': 'Que practicaste?',
+  'mock round notes': 'notas de ronda de practica',
+  'minutes': 'minutos',
+  'officer-reviewed checklist': 'lista revisada por un oficial',
+  'study log or reflection': 'registro de estudio o reflexion',
 }
 
 function translatePlainText(text) {
@@ -246,6 +371,9 @@ function translatePlainText(text) {
 
   const selectedMatch = trimmed.match(/^Selected (\d+) of 4$/)
   if (selectedMatch) return text.replace(trimmed, `Seleccionado ${selectedMatch[1]} de 4`)
+
+  const selectedValueMatch = trimmed.match(/^Selected: (.+)$/)
+  if (selectedValueMatch) return text.replace(trimmed, `Seleccionado: ${selectedValueMatch[1]}`)
 
   const countOfFourMatch = trimmed.match(/^(\d+) of 4$/)
   if (countOfFourMatch) return text.replace(trimmed, `${countOfFourMatch[1]} de 4`)
@@ -257,13 +385,16 @@ function translatePlainText(text) {
   if (targetMatch) return text.replace(trimmed, `${targetMatch[1]} eventos objetivo`)
 
   const hoursMatch = trimmed.match(/^(\d+)\+ hrs$/)
-  if (hoursMatch) return text.replace(trimmed, `${hoursMatch[1]}+ horas`)
+  if (hoursMatch) return text.replace(trimmed, `${hoursMatch[1]}+ h`)
 
   const hoursWeekMatch = trimmed.match(/^(\d+)\+ hrs\/week$/)
-  if (hoursWeekMatch) return text.replace(trimmed, `${hoursWeekMatch[1]}+ horas/semana`)
+  if (hoursWeekMatch) return text.replace(trimmed, `${hoursWeekMatch[1]}+ h/semana`)
 
   const minutesMatch = trimmed.match(/^(\d+) min$/)
   if (minutesMatch) return text.replace(trimmed, `${minutesMatch[1]} min`)
+
+  const characterCountMatch = trimmed.match(/^(\d+)\/120 characters$/)
+  if (characterCountMatch) return text.replace(trimmed, `${characterCountMatch[1]}/120 caracteres`)
 
   const levelMatch = trimmed.match(/^Level (\d+): (.+)$/)
   if (levelMatch) {
@@ -312,7 +443,13 @@ export function readLanguage() {
 export function translateVisibleText(language, root = document.body) {
   if (language !== 'es' || !root) return
   translateAttributes(root)
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parentTag = node.parentElement?.tagName?.toLowerCase()
+      if (parentTag === 'script' || parentTag === 'style') return NodeFilter.FILTER_REJECT
+      return NodeFilter.FILTER_ACCEPT
+    },
+  })
   const textNodes = []
   while (walker.nextNode()) textNodes.push(walker.currentNode)
   textNodes.forEach((node) => {
