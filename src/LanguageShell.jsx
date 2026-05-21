@@ -24,7 +24,13 @@ export function LanguageShell({ children }) {
     window.setTimeout(runTranslation, 0)
     if (language !== 'es' || !root) return undefined
     const observer = new MutationObserver(runTranslation)
-    observer.observe(root, { childList: true, subtree: true, characterData: true })
+    observer.observe(root, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ['placeholder', 'aria-label', 'title'],
+    })
     return () => observer.disconnect()
   }, [language])
 
