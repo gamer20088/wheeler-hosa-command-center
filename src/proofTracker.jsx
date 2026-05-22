@@ -185,19 +185,25 @@ function PracticeLog({ selectedEvent, openPrepPackForEvent, language = 'en' }) {
       audioContextRef.current = context
       if (context.state === 'suspended') await context.resume()
       const tones = [
-        { frequency: 660, start: 0, duration: 0.34, volume: 0.075 },
-        { frequency: 880, start: 0.4, duration: 0.34, volume: 0.08 },
-        { frequency: 1046, start: 0.82, duration: 0.62, volume: 0.085 },
+        { frequency: 440, start: 0, duration: 0.12, volume: 0.11 },
       ]
+      for (let cycle = 0; cycle < 9; cycle += 1) {
+        const offset = 0.2 + cycle * 0.52
+        tones.push(
+          { frequency: 880, start: offset, duration: 0.18, volume: 0.13 },
+          { frequency: 1175, start: offset + 0.21, duration: 0.14, volume: 0.115 },
+          { frequency: 1320, start: offset + 0.38, duration: 0.14, volume: 0.11 },
+        )
+      }
       tones.forEach(({ frequency, start, duration, volume }) => {
         const oscillator = context.createOscillator()
         const gain = context.createGain()
         const startAt = context.currentTime + start
         const endAt = startAt + duration
-        oscillator.type = 'sine'
+        oscillator.type = 'triangle'
         oscillator.frequency.setValueAtTime(frequency, startAt)
         gain.gain.setValueAtTime(0.0001, startAt)
-        gain.gain.exponentialRampToValueAtTime(volume, startAt + 0.04)
+        gain.gain.exponentialRampToValueAtTime(volume, startAt + 0.02)
         gain.gain.exponentialRampToValueAtTime(0.0001, endAt)
         oscillator.connect(gain)
         gain.connect(context.destination)
