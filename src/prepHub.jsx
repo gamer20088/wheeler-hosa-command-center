@@ -6,6 +6,11 @@ import { t } from './i18n.js'
 
 const PACK_FILTERS = ['All', 'Test Prep', 'Writing and Speaking', 'Project and Upload', 'Team Events', 'Career and Creative']
 
+function scrollToTop() {
+  if (typeof window === 'undefined') return
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
 function cx(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -106,6 +111,11 @@ export function PrepHub({ language }) {
     return () => window.removeEventListener('hashchange', syncFromHash)
   }, [])
 
+  useEffect(() => {
+    if (!selectedPack) return
+    window.setTimeout(scrollToTop, 0)
+  }, [selectedPack])
+
   const filteredPacks = useMemo(() => {
     const searchTerm = query.trim().toLowerCase()
     return EVENT_PREP_PACKS.filter((pack) => {
@@ -118,12 +128,14 @@ export function PrepHub({ language }) {
   const openPack = (pack) => {
     setSelectedPack(pack)
     if (typeof window !== 'undefined') window.location.hash = `prep/${pack.slug}`
+    scrollToTop()
   }
   const closePack = () => {
     setSelectedPack(null)
     if (typeof window !== 'undefined' && window.location.hash.startsWith('#prep/')) {
       window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`)
     }
+    scrollToTop()
   }
 
   if (selectedPack) return <PrepPackPage pack={selectedPack} onBack={closePack} language={language} />
