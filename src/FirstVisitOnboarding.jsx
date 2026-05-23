@@ -1,26 +1,50 @@
 import { useEffect, useState } from 'react'
 import { BookOpen, ClipboardCheck, Search, X } from 'lucide-react'
-import { readLanguage, t } from './i18n.js'
+import { readLanguage } from './i18n.js'
 
 const ONBOARDING_STORAGE_KEY = 'wheelerHosaOnboardingSeen'
 
 const STEPS = [
   {
-    title: 'Find Event',
-    description: 'Take the quick quiz or browse all events.',
+    key: 'find',
     icon: Search,
   },
   {
-    title: 'Open Prep Hub',
-    description: 'Use free prep packs, resources, and checklists.',
+    key: 'prep',
     icon: BookOpen,
   },
   {
-    title: 'Practice and submit proof',
-    description: 'Use the timer, save practice notes, and submit weekly evidence.',
+    key: 'proof',
     icon: ClipboardCheck,
   },
 ]
+
+const TEXT = {
+  en: {
+    title: 'Welcome to Wheeler HOSA',
+    subtitle: 'Use this portal to choose an event, open prep resources, and track practice.',
+    close: 'Close',
+    doNotShowAgain: 'Do not show again',
+    start: 'Start with Find Event',
+    steps: {
+      find: ['Find Event', 'Take the quick quiz or browse all events.'],
+      prep: ['Open Prep Hub', 'Use free prep packs, resources, and checklists.'],
+      proof: ['Practice and submit proof', 'Use the timer, save practice notes, and submit weekly evidence.'],
+    },
+  },
+  es: {
+    title: 'Bienvenido a Wheeler HOSA',
+    subtitle: 'Usa este portal para escoger un evento, abrir recursos de preparacion y registrar practica.',
+    close: 'Cerrar',
+    doNotShowAgain: 'No mostrar otra vez',
+    start: 'Empezar con Encontrar evento',
+    steps: {
+      find: ['Encontrar evento', 'Haz el cuestionario rapido o revisa todos los eventos.'],
+      prep: ['Abrir Centro de preparacion', 'Usa paquetes gratuitos de preparacion, recursos y listas de revision.'],
+      proof: ['Practica y entrega evidencia', 'Usa el temporizador, guarda notas de practica y entrega evidencia semanal.'],
+    },
+  },
+}
 
 function hasSeenOnboarding() {
   try {
@@ -50,6 +74,7 @@ export function FirstVisitOnboarding() {
   const [open, setOpen] = useState(false)
   const [doNotShowAgain, setDoNotShowAgain] = useState(false)
   const language = readLanguage()
+  const text = TEXT[language] || TEXT.en
 
   useEffect(() => {
     if (!hasSeenOnboarding()) setOpen(true)
@@ -99,20 +124,16 @@ export function FirstVisitOnboarding() {
           <div>
             <p className="text-xs font-black uppercase tracking-wide text-rose-900">Wheeler HOSA</p>
             <h2 id="first-visit-onboarding-title" className="mt-1 text-2xl font-black tracking-tight text-blue-950">
-              {t(language, 'Welcome to Wheeler HOSA', 'Welcome to Wheeler HOSA')}
+              {text.title}
             </h2>
             <p className="mt-2 text-sm font-bold leading-5 text-slate-600">
-              {t(
-                language,
-                'Use this portal to choose an event, open prep resources, and track practice.',
-                'Use this portal to choose an event, open prep resources, and track practice.',
-              )}
+              {text.subtitle}
             </p>
           </div>
           <button
             type="button"
             onClick={closeForSession}
-            aria-label={t(language, 'Close', 'Close')}
+            aria-label={text.close}
             className="inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-slate-100 text-slate-700 transition hover:bg-blue-50 hover:text-blue-950 focus:outline-none focus:ring-2 focus:ring-blue-300"
           >
             <X size={18} />
@@ -122,18 +143,19 @@ export function FirstVisitOnboarding() {
         <div className="mt-4 grid gap-2.5">
           {STEPS.map((step, index) => {
             const Icon = step.icon
+            const [title, description] = text.steps[step.key]
             return (
-              <div key={step.title} className="flex gap-3 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
+              <div key={step.key} className="flex gap-3 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-950">
                   <Icon size={18} />
                 </div>
                 <div>
                   <p className="text-sm font-black text-slate-950">
                     <span className="mr-1 text-rose-900">{index + 1}.</span>
-                    {t(language, step.title, step.title)}
+                    {title}
                   </p>
                   <p className="mt-0.5 text-sm font-bold leading-5 text-slate-600">
-                    {t(language, step.description, step.description)}
+                    {description}
                   </p>
                 </div>
               </div>
@@ -148,7 +170,7 @@ export function FirstVisitOnboarding() {
             onChange={(event) => toggleDoNotShowAgain(event.target.checked)}
             className="h-4 w-4 cursor-pointer accent-blue-950"
           />
-          {t(language, 'Do not show again', 'Do not show again')}
+          {text.doNotShowAgain}
         </label>
 
         <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
@@ -157,14 +179,14 @@ export function FirstVisitOnboarding() {
             onClick={startWithFindEvent}
             className="inline-flex min-h-10 cursor-pointer items-center justify-center rounded-xl bg-blue-950 px-4 py-2 text-sm font-black text-white transition hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-300"
           >
-            {t(language, 'Start with Find Event', 'Start with Find Event')}
+            {text.start}
           </button>
           <button
             type="button"
             onClick={closeForSession}
             className="inline-flex min-h-10 cursor-pointer items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-black text-slate-800 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
           >
-            {t(language, 'Close', 'Close')}
+            {text.close}
           </button>
         </div>
       </section>
