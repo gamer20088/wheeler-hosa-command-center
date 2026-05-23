@@ -11,13 +11,41 @@ const HIDDEN_NAV_LABELS = [
 const FINDER_LABELS = ['Event Finder', 'Buscador de eventos', 'Find Event', 'Encontrar evento']
 const LIBRARY_LABELS = ['Event Library', 'Biblioteca de eventos']
 const OFFICER_LABELS = ['Officer Tools', 'Herramientas de oficiales']
+const LANGUAGE_LABELS = ['English', 'Espa\u00f1ol']
+const HEADER_ACTION_LABELS = [
+  'Official Guidelines',
+  'Guias oficiales',
+  'Gu\u00edas oficiales',
+  'Glossary',
+  'Glosario',
+]
+
+const LOCAL_LABELS = {
+  es: {
+    findEvent: 'Encontrar evento',
+    browseAllEvents: 'Ver todos los eventos',
+    eventFinderDiscoveryNote: 'Usa el cuestionario primero, o revisa todos los eventos si ya sabes lo que quieres.',
+    officerTools: 'Herramientas de oficiales',
+  },
+}
+
+const UTILITY_BUTTON_CLASS =
+  'inline-flex min-h-10 shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-white px-3 py-2 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300'
+
+function label(language, key, fallback) {
+  return LOCAL_LABELS[language]?.[key] || t(language, key, fallback)
+}
 
 function buttonText(button) {
   return (button?.textContent || '').replace(/\s+/g, ' ').trim()
 }
 
+function elementText(element) {
+  return (element?.textContent || '').replace(/\s+/g, ' ').trim()
+}
+
 function findButtonByLabels(buttons, labels) {
-  return buttons.find((button) => labels.some((label) => buttonText(button).includes(label))) || null
+  return buttons.find((button) => labels.some((currentLabel) => buttonText(button).includes(currentLabel))) || null
 }
 
 function setButtonText(button, text) {
@@ -25,27 +53,73 @@ function setButtonText(button, text) {
   if (span && span.textContent !== text) span.textContent = text
 }
 
-function getPortalUrl(hash) {
-  if (typeof window === 'undefined') return hash
-  return `${window.location.origin}${window.location.pathname}${hash}`
+function hasAllLanguageLabels(element) {
+  const text = elementText(element)
+  return LANGUAGE_LABELS.every((currentLabel) => text.includes(currentLabel))
 }
 
-function makeSecondaryButton(label, onClick) {
+function hasHeaderActionLabel(element) {
+  const text = elementText(element)
+  return HEADER_ACTION_LABELS.some((currentLabel) => text.includes(currentLabel))
+}
+
+function findLanguageToggleGroups() {
+  const ariaGroups = Array.from(document.querySelectorAll('[aria-label="Language"], [aria-label="Idioma"]'))
+  const textGroups = Array.from(document.querySelectorAll('div')).filter(hasAllLanguageLabels)
+  const groups = Array.from(new Set([...ariaGroups, ...textGroups])).filter(hasAllLanguageLabels)
+
+  return groups.filter((group) => !groups.some((candidate) => candidate !== group && group.contains(candidate)))
+}
+
+function isInsideHeaderActions(group) {
+  let current = group.parentElement
+  for (let depth = 0; current && depth < 5; depth += 1) {
+    if (hasHeaderActionLabel(current)) return true
+    current = current.parentElement
+  }
+  return false
+}
+
+function hideDuplicateLanguageToggles() {
+  const groups = findLanguageToggleGroups()
+  if (groups.length <= 1) return
+
+  const keep = groups.find(isInsideHeaderActions) || groups[0]
+  groups.forEach((group) => {
+    if (group === keep) {
+      group.style.display = ''
+      group.removeAttribute('data-hidden-duplicate-language-toggle')
+      return
+    }
+
+    group.dataset.hiddenDuplicateLanguageToggle = 'true'
+    group.style.display = 'none'
+  })
+}
+
+function hideMainNavButton(button) {
+  button.dataset.simplifiedHiddenNav = 'true'
+  button.setAttribute('aria-hidden', 'true')
+  button.tabIndex = -1
+  button.style.display = 'none'
+}
+
+function makeSecondaryButton(buttonLabel, onClick) {
   const button = document.createElement('button')
   button.type = 'button'
   button.dataset.secondaryOfficerTools = 'true'
-  button.className = 'inline-flex cursor-pointer items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300'
-  button.textContent = label
+  button.className = UTILITY_BUTTON_CLASS
+  button.textContent = buttonLabel
   button.addEventListener('click', onClick)
   return button
 }
 
-function makeBrowseEventsButton(label, onClick) {
+function makeBrowseEventsButton(buttonLabel, onClick) {
   const button = document.createElement('button')
   button.type = 'button'
   button.dataset.browseAllEvents = 'true'
-  button.className = 'inline-flex min-h-10 cursor-pointer items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-black text-slate-900 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300'
-  button.textContent = label
+  button.className = `${UTILITY_BUTTON_CLASS} w-full sm:w-auto`
+  button.textContent = buttonLabel
   button.addEventListener('click', onClick)
   return button
 }
@@ -54,9 +128,85 @@ function isActive(button) {
   return button?.className?.includes('bg-blue-950')
 }
 
+function updateNavGrid(nav) {
+  nav.classList.remove('lg:grid-cols-7')
+  nav.classList.add('lg:grid-cols-5')
+}
+
+function updateOfficerToolsAction(language, officerButton) {
+  const glossaryButton = Array.from(document.querySelectorAll('button')).find((button) =>
+    ['Glossary', 'Glosario'].some((currentLabel) => buttonText(button).includes(currentLabel)),
+  )
+  const headerActions = glossaryButton?.parentElement
+  const existingButtons = Array.from(document.querySelectorAll('[data-secondary-officer-tools="true"]'))
+  const secondaryOfficer = existingButtons[0]
+
+  existingButtons.slice(1).forEach((button) => button.remove())
+  if (!headerActions || !officerButton) return
+
+  const buttonLabel = label(language, 'officerTools', 'Officer Tools')
+  if (!secondaryOfficer) {
+    headerActions.appendChild(makeSecondaryButton(buttonLabel, () => officerButton.click()))
+    return
+  }
+
+  if (secondaryOfficer.parentElement !== headerActions) {
+    headerActions.appendChild(secondaryOfficer)
+  }
+  secondaryOfficer.className = UTILITY_BUTTON_CLASS
+  secondaryOfficer.textContent = buttonLabel
+}
+
+function updateBrowseEventsHandoff(language, main, finderButton, libraryButton) {
+  const browseExisting = document.querySelector('[data-browse-all-events="true"]')
+  const browseBar = browseExisting?.closest('[data-finder-browse-bar="true"]')
+  const finderActive = isActive(finderButton)
+  const libraryActive = isActive(libraryButton)
+
+  if (libraryActive && finderButton) {
+    finderButton.className = finderButton.className.replace(
+      'bg-slate-100 text-slate-700 hover:bg-slate-200',
+      'bg-blue-950 text-white',
+    )
+  }
+
+  if (!main || !finderActive || libraryActive || !libraryButton) {
+    browseBar?.remove()
+    return
+  }
+
+  const noteText = label(
+    language,
+    'eventFinderDiscoveryNote',
+    'Use the quiz first, or browse every event if you already know what you want.',
+  )
+  const buttonLabel = label(language, 'browseAllEvents', 'Browse all events')
+
+  if (browseBar) {
+    browseBar.querySelector('p').textContent = noteText
+    browseExisting.textContent = buttonLabel
+    return
+  }
+
+  const bar = document.createElement('div')
+  bar.dataset.finderBrowseBar = 'true'
+  bar.className =
+    'mb-4 flex flex-col gap-2 rounded-xl bg-blue-50 px-3 py-2 ring-1 ring-blue-100 sm:flex-row sm:items-center sm:justify-between'
+
+  const note = document.createElement('p')
+  note.className = 'text-sm font-bold text-slate-700'
+  note.textContent = noteText
+  bar.appendChild(note)
+  bar.appendChild(makeBrowseEventsButton(buttonLabel, () => libraryButton.click()))
+  main.prepend(bar)
+}
+
 function simplifyNavigation() {
   if (typeof document === 'undefined') return
+
   const language = readLanguage()
+  hideDuplicateLanguageToggles()
+
   const nav = document.querySelector('nav[aria-label="Main navigation"]')
   if (!nav) return
 
@@ -65,55 +215,19 @@ function simplifyNavigation() {
   const libraryButton = findButtonByLabels(buttons, LIBRARY_LABELS)
   const officerButton = findButtonByLabels(buttons, OFFICER_LABELS)
 
-  if (finderButton) setButtonText(finderButton, t(language, 'findEvent', 'Find Event'))
+  if (finderButton) setButtonText(finderButton, label(language, 'findEvent', 'Find Event'))
 
   buttons.forEach((button) => {
     const text = buttonText(button)
-    if (HIDDEN_NAV_LABELS.some((label) => text.includes(label))) {
-      button.dataset.simplifiedHiddenNav = 'true'
-      button.style.display = 'none'
+    if (HIDDEN_NAV_LABELS.some((currentLabel) => text.includes(currentLabel))) {
+      hideMainNavButton(button)
     }
   })
 
-  nav.className = nav.className
-    .replace(/lg:grid-cols-7/g, 'lg:grid-cols-5')
-    .replace(/sm:grid-cols-3/g, 'sm:grid-cols-3')
-
-  const glossaryButton = Array.from(document.querySelectorAll('button')).find((button) => ['Glossary', 'Glosario'].some((label) => buttonText(button).includes(label)))
-  const headerActions = glossaryButton?.parentElement
-  const secondaryOfficer = document.querySelector('[data-secondary-officer-tools="true"]')
-  if (headerActions && officerButton && !secondaryOfficer) {
-    const label = t(language, 'officerTools', 'Officer Tools')
-    headerActions.appendChild(makeSecondaryButton(label, () => officerButton.click()))
-  } else if (secondaryOfficer) {
-    secondaryOfficer.textContent = t(language, 'officerTools', 'Officer Tools')
-  }
-
-  const main = document.querySelector('main')
-  const browseExisting = document.querySelector('[data-browse-all-events="true"]')
-  const finderActive = isActive(finderButton)
-  const libraryActive = isActive(libraryButton)
-
-  if (libraryActive && finderButton) {
-    finderButton.className = finderButton.className
-      .replace('bg-slate-100 text-slate-700 hover:bg-slate-200', 'bg-blue-950 text-white')
-  }
-
-  if (main && finderActive && libraryButton && !browseExisting) {
-    const bar = document.createElement('div')
-    bar.dataset.finderBrowseBar = 'true'
-    bar.className = 'mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200'
-    const note = document.createElement('p')
-    note.className = 'text-sm font-bold text-slate-700'
-    note.textContent = t(language, 'eventFinderDiscoveryNote', 'Use the quiz first, or browse every event if you already know what you want.')
-    bar.appendChild(note)
-    bar.appendChild(makeBrowseEventsButton(t(language, 'browseAllEvents', 'Browse all events'), () => libraryButton.click()))
-    main.prepend(bar)
-  }
-
-  if ((!finderActive || !main) && browseExisting) {
-    browseExisting.closest('[data-finder-browse-bar="true"]')?.remove()
-  }
+  updateNavGrid(nav)
+  updateOfficerToolsAction(language, officerButton)
+  updateBrowseEventsHandoff(language, document.querySelector('main'), finderButton, libraryButton)
+  hideDuplicateLanguageToggles()
 }
 
 export function NavigationSimplifier({ children }) {
