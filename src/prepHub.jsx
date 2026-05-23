@@ -1,10 +1,23 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, BookOpen, CheckCircle2, ClipboardCheck, Copy, ExternalLink, Search } from 'lucide-react'
 import { EVENT_PREP_PACKS } from './eventPrepPacks.js'
+import { getResourcesForPack } from './prepResourceLinks.js'
 import { PORTAL_LINKS } from './portalConfig.js'
 import { t } from './i18n.js'
 
 const PACK_FILTERS = ['All', 'Test Prep', 'Writing and Speaking', 'Project and Upload', 'Team Events', 'Career and Creative']
+const RESOURCE_GROUP_ORDER = ['Official Rules', 'Learn', 'Practice', 'Research', 'Examples', 'Career', 'Spanish-Friendly']
+const RESOURCE_TYPE_LABELS_ES = {
+  'Official Rules': 'Reglas oficiales',
+  Learn: 'Aprender',
+  Practice: 'Práctica',
+  Research: 'Investigación',
+  Examples: 'Ejemplos',
+  Career: 'Carrera',
+  'Spanish-Friendly': 'Recursos en español',
+}
+const RESOURCE_LINK_NOTE = 'Links open outside this portal. Use them for study, examples, and background. Always verify official HOSA rules separately.'
+const RESOURCE_LINK_NOTE_ES = 'Los enlaces abren fuera de este portal. Úsalos para estudiar, buscar ejemplos y entender el tema. Verifica siempre las reglas oficiales de HOSA por separado.'
 
 function scrollToTop() {
   if (typeof window === 'undefined') return
@@ -17,6 +30,10 @@ function cx(...classes) {
 
 function safeArray(value) {
   return Array.isArray(value) ? value : []
+}
+
+function resourceTypeLabel(language, type) {
+  return language === 'es' ? RESOURCE_TYPE_LABELS_ES[type] || type : type
 }
 
 function SectionCard({ title, children }) {
@@ -36,7 +53,26 @@ function PrepButton({ children, onClick, href, variant = 'primary', icon: Icon }
   return <button type="button" onClick={onClick} className={className}>{Icon && <Icon size={16} />}{children}</button>
 }
 
+function groupResources(resources) {
+  const grouped = RESOURCE_GROUP_ORDER.map((type) => [type, []])
+  const fallbackGroup = grouped.find(([type]) => type === 'Learn')[1]
+  safeArray(resources).forEach((resource) => {
+    const type = RESOURCE_GROUP_ORDER.includes(resource?.type) ? resource.type : 'Learn'
+    const group = grouped.find(([groupType]) => groupType === type)?.[1] || fallbackGroup
+    group.push({ ...resource, type })
+  })
+  return grouped.filter(([, items]) => items.length)
+}
+
+function ResourceCard({ resource, language }) {
+  const isLocalNote = resource.url === '#'
+  const content = <><span className="flex items-start justify-between gap-3 text-sm font-black text-slate-950"><span>{resource.label}</span>{!isLocalNote && <ExternalLink size={15} className="mt-0.5 shrink-0 text-blue-950" />}</span><span className="mt-2 inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-black text-blue-950 ring-1 ring-blue-100">{resourceTypeLabel(language, resource.type || 'Learn')}</span><span className="mt-2 block text-sm leading-6 text-slate-600">{resource.why}</span></>
+  if (isLocalNote) return <div className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">{content}</div>
+  return <a href={resource.url} target="_blank" rel="noreferrer" className="block cursor-pointer rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300">{content}</a>
+}
+
 function packToText(pack) {
+  const resources = getResourcesForPack(pack)
   const lines = [
     `${pack.eventName} Prep Pack`,
     `Type: ${pack.packType}`,
@@ -55,7 +91,7 @@ function packToText(pack) {
     ...safeArray(pack.practiceTasks).map((item) => `- ${item}`),
     '',
     'Free Resources:',
-    ...safeArray(pack.freeResources).map((resource) => `- ${resource.label}: ${resource.url} (${resource.why})`),
+    ...safeArray(resources).map((resource) => `- ${resource.label}: ${resource.url} (${resource.why})`),
     '',
     'Evidence to Save:',
     ...safeArray(pack.evidenceToSave).map((item) => `- ${item}`),
@@ -90,7 +126,42 @@ function PrepPackCard({ pack, onOpen, language }) {
 }
 
 function PrepPackPage({ pack, onBack, language }) {
-  return <div className="space-y-5"><section className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5"><button type="button" onClick={onBack} className="mb-4 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-slate-100 px-3 py-2 text-sm font-black text-slate-700 transition hover:bg-blue-50 hover:ring-1 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"><ArrowLeft size={16} />{t(language, 'backToPrepHub', 'Back to Prep Hub')}</button><div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between"><div><p className="text-xs font-black uppercase tracking-wide text-rose-900">{t(language, pack.packType, pack.packType)}</p><h2 className="mt-1 text-3xl font-black tracking-tight text-slate-950">{pack.eventName}</h2><p className="mt-2 max-w-3xl text-sm font-bold leading-6 text-slate-700">{pack.bestFor}</p><div className="mt-3 flex flex-wrap gap-2">{safeArray(pack.quickTags).map((tag) => <span key={tag} className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-950 ring-1 ring-blue-100">{tag}</span>)}</div></div><div className="grid gap-2 sm:grid-cols-3 lg:min-w-96 lg:grid-cols-1"><PrepButton onClick={() => copyText(packToText(pack), t(language, 'prepPackCopied', 'Prep pack copied.'))} icon={Copy}>{t(language, 'copyPrepPack', 'Copy prep pack')}</PrepButton><PrepButton onClick={() => copyText(checklistToText(pack), t(language, 'officerChecklistCopied', 'Officer checklist copied.'))} variant="light" icon={ClipboardCheck}>{t(language, 'copyOfficerChecklist', 'Copy officer checklist')}</PrepButton><PrepButton href={PORTAL_LINKS.officialGuidelines} variant="light" icon={ExternalLink}>{t(language, 'openOfficialHosaGuidelines', 'Open official HOSA guidelines')}</PrepButton></div></div><div className="mt-4 rounded-xl bg-amber-50 p-3 text-sm font-bold leading-6 text-amber-950 ring-1 ring-amber-200"><span className="font-black">{t(language, 'officialReminder', 'Official reminder')}:</span> {pack.officialReminder}</div></section><div className="grid gap-4 lg:grid-cols-2"><SectionCard title={t(language, 'startHere', 'Start Here')}><BulletList items={pack.startHere} /></SectionCard><SectionCard title={t(language, 'fourWeekPlan', '4-Week Plan')}><BulletList items={pack.fourWeekPlan} /></SectionCard><SectionCard title={t(language, 'practiceTasks', 'Practice Tasks')}><BulletList items={pack.practiceTasks} /></SectionCard><SectionCard title={t(language, 'freeResources', 'Free Resources')}><div className="space-y-3">{safeArray(pack.freeResources).map((resource) => <a key={`${resource.label}-${resource.url}`} href={resource.url} target="_blank" rel="noreferrer" className="block cursor-pointer rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"><span className="flex items-center justify-between gap-3 text-sm font-black text-slate-950">{resource.label}<ExternalLink size={15} className="shrink-0 text-blue-950" /></span><span className="mt-1 block text-sm leading-6 text-slate-600">{resource.why}</span></a>)}</div></SectionCard><SectionCard title={t(language, 'evidenceToSave', 'Evidence to Save')}><BulletList items={pack.evidenceToSave} /></SectionCard><SectionCard title={t(language, 'officerReviewChecklist', 'Officer Review Checklist')}><BulletList items={pack.officerChecklist} /></SectionCard><SectionCard title={t(language, 'mockPracticeRubric', 'Mock Practice Rubric')}><div className="space-y-2">{safeArray(pack.mockRubric).map((item) => <div key={item.category} className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200"><p className="text-sm font-black text-slate-950">{item.category}</p><p className="mt-1 text-sm leading-6 text-slate-700">{item.lookFor}</p></div>)}</div></SectionCard><SectionCard title={t(language, 'watchOuts', 'Watch Outs')}><BulletList items={pack.watchOuts} /></SectionCard></div></div>
+  const resourceGroups = groupResources(getResourcesForPack(pack))
+  return <div className="space-y-5">
+<section className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5">
+<button type="button" onClick={onBack} className="mb-4 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-slate-100 px-3 py-2 text-sm font-black text-slate-700 transition hover:bg-blue-50 hover:ring-1 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"><ArrowLeft size={16} />{t(language, 'backToPrepHub', 'Back to Prep Hub')}</button>
+<div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+<div>
+<p className="text-xs font-black uppercase tracking-wide text-rose-900">{t(language, pack.packType, pack.packType)}</p>
+<h2 className="mt-1 text-3xl font-black tracking-tight text-slate-950">{pack.eventName}</h2>
+<p className="mt-2 max-w-3xl text-sm font-bold leading-6 text-slate-700">{pack.bestFor}</p>
+<div className="mt-3 flex flex-wrap gap-2">{safeArray(pack.quickTags).map((tag) => <span key={tag} className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-950 ring-1 ring-blue-100">{tag}</span>)}</div>
+</div>
+<div className="grid gap-2 sm:grid-cols-3 lg:min-w-96 lg:grid-cols-1">
+<PrepButton onClick={() => copyText(packToText(pack), t(language, 'prepPackCopied', 'Prep pack copied.'))} icon={Copy}>{t(language, 'copyPrepPack', 'Copy prep pack')}</PrepButton>
+<PrepButton onClick={() => copyText(checklistToText(pack), t(language, 'officerChecklistCopied', 'Officer checklist copied.'))} variant="light" icon={ClipboardCheck}>{t(language, 'copyOfficerChecklist', 'Copy officer checklist')}</PrepButton>
+<PrepButton href={PORTAL_LINKS.officialGuidelines} variant="light" icon={ExternalLink}>{t(language, 'openOfficialHosaGuidelines', 'Open official HOSA guidelines')}</PrepButton>
+</div>
+</div>
+<div className="mt-4 rounded-xl bg-amber-50 p-3 text-sm font-bold leading-6 text-amber-950 ring-1 ring-amber-200"><span className="font-black">{t(language, 'officialReminder', 'Official reminder')}:</span> {pack.officialReminder}</div>
+</section>
+<div className="grid gap-4 lg:grid-cols-2">
+<SectionCard title={t(language, 'startHere', 'Start Here')}><BulletList items={pack.startHere} /></SectionCard>
+<SectionCard title={t(language, 'fourWeekPlan', '4-Week Plan')}><BulletList items={pack.fourWeekPlan} /></SectionCard>
+<SectionCard title={t(language, 'practiceTasks', 'Practice Tasks')}><BulletList items={pack.practiceTasks} /></SectionCard>
+<SectionCard title={t(language, 'freeResources', 'Free Resources')}>
+<div className="space-y-4">{resourceGroups.map(([type, resources]) => <div key={type}>
+<h4 className="mb-2 text-xs font-black uppercase tracking-wide text-rose-900">{resourceTypeLabel(language, type)}</h4>
+<div className="space-y-2">{resources.map((resource) => <ResourceCard key={`${resource.label}-${resource.url}`} resource={resource} language={language} />)}</div>
+</div>)}</div>
+<p className="mt-4 rounded-xl bg-blue-50 p-3 text-xs font-bold leading-5 text-blue-950 ring-1 ring-blue-100">{language === 'es' ? RESOURCE_LINK_NOTE_ES : RESOURCE_LINK_NOTE}</p>
+</SectionCard>
+<SectionCard title={t(language, 'evidenceToSave', 'Evidence to Save')}><BulletList items={pack.evidenceToSave} /></SectionCard>
+<SectionCard title={t(language, 'officerReviewChecklist', 'Officer Review Checklist')}><BulletList items={pack.officerChecklist} /></SectionCard>
+<SectionCard title={t(language, 'mockPracticeRubric', 'Mock Practice Rubric')}><div className="space-y-2">{safeArray(pack.mockRubric).map((item) => <div key={item.category} className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200"><p className="text-sm font-black text-slate-950">{item.category}</p><p className="mt-1 text-sm leading-6 text-slate-700">{item.lookFor}</p></div>)}</div></SectionCard>
+<SectionCard title={t(language, 'watchOuts', 'Watch Outs')}><BulletList items={pack.watchOuts} /></SectionCard>
+</div>
+</div>
 }
 
 export function PrepHub({ language }) {
