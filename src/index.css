@@ -133,5 +133,19 @@
     [data-portal-root] main .flex.flex-wrap.gap-2 {
       gap: 0.375rem;
     }
+
+    [data-portal-root] main section.rounded-2xl,
+    [data-portal-root] main article.rounded-2xl {
+      border-radius: 1rem;
+    }
+
+    [data-portal-root] main input,
+    [data-portal-root] main select {
+      min-height: 2.5rem;
+    }
+
+    [data-portal-root] main .grid.gap-3 {
+      gap: 0.625rem;
+    }
   }
 }
