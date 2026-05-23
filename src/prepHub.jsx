@@ -60,16 +60,16 @@ function prepText(language, value) {
 }
 
 function PanelCard({ title, children, className }) {
-  return <section className={cx('rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200', className)}><h3 className="text-sm font-black uppercase tracking-wide text-blue-950">{title}</h3><div className="mt-3">{children}</div></section>
+  return <section className={cx('rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:p-4', className)}><h3 className="text-sm font-black uppercase tracking-wide text-blue-950">{title}</h3><div className="mt-2.5">{children}</div></section>
 }
 
 function BulletList({ items, compact = false }) {
-  return <div className={compact ? 'space-y-1.5' : 'space-y-2'}>{safeArray(items).map((item) => <div key={typeof item === 'string' ? item : `${item.week}-${item.focus}`} className="flex gap-2 text-sm leading-6 text-slate-700"><CheckCircle2 size={15} className="mt-1 shrink-0 text-blue-900" /><span>{typeof item === 'string' ? item : <><span className="font-black text-slate-950">{item.week}:</span> {item.focus}</>}</span></div>)}</div>
+  return <div className={compact ? 'space-y-1.5' : 'space-y-2'}>{safeArray(items).map((item) => <div key={typeof item === 'string' ? item : `${item.week}-${item.focus}`} className="flex gap-2 text-sm leading-5 text-slate-700 sm:leading-6"><CheckCircle2 size={15} className="mt-0.5 shrink-0 text-blue-900" /><span>{typeof item === 'string' ? item : <><span className="font-black text-slate-950">{item.week}:</span> {item.focus}</>}</span></div>)}</div>
 }
 
 function PrepButton({ children, onClick, href, variant = 'primary', icon: Icon }) {
   const className = cx(
-    'inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300',
+    'inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300 sm:min-h-11 sm:px-4 sm:text-sm',
     variant === 'primary' ? 'bg-blue-950 text-white hover:bg-blue-900' : 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-blue-50 hover:ring-blue-300',
   )
   if (href) return <a href={href} target="_blank" rel="noreferrer" className={className}>{Icon && <Icon size={16} />}{children}</a>
@@ -89,31 +89,31 @@ function groupResources(resources) {
 
 function ResourceCard({ resource, language }) {
   const isLocalNote = resource.url === '#'
-  const content = <><span className="flex items-start justify-between gap-3 text-sm font-black text-slate-950"><span>{resource.label}</span><span className="inline-flex shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-black text-blue-950 ring-1 ring-blue-100">{resourceTypeLabel(language, resource.type || 'Learn')}</span></span><span className="mt-1.5 line-clamp-2 block text-sm leading-5 text-slate-600">{resource.why}</span>{!isLocalNote && <ExternalLink size={14} className="absolute right-3 bottom-3 text-blue-950" />}</>
-  if (isLocalNote) return <div className="relative rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">{content}</div>
-  return <a href={resource.url} target="_blank" rel="noreferrer" className="relative block cursor-pointer rounded-xl bg-slate-50 p-3 pr-9 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300">{content}</a>
+  const content = <><span className="flex items-start justify-between gap-2 text-sm font-black text-slate-950"><span>{resource.label}</span><span className="inline-flex shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-black text-blue-950 ring-1 ring-blue-100">{resourceTypeLabel(language, resource.type || 'Learn')}</span></span><span className="mt-1 line-clamp-2 block text-xs font-bold leading-5 text-slate-600 sm:text-sm">{resource.why}</span>{!isLocalNote && <ExternalLink size={14} className="absolute right-2.5 bottom-2.5 text-blue-950" />}</>
+  if (isLocalNote) return <div className="relative rounded-xl bg-slate-50 p-2.5 ring-1 ring-slate-200 sm:p-3">{content}</div>
+  return <a href={resource.url} target="_blank" rel="noreferrer" className="relative block cursor-pointer rounded-xl bg-slate-50 p-2.5 pr-8 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300 sm:p-3 sm:pr-9">{content}</a>
 }
 
 function PrepSectionButton({ active, children, onClick }) {
-  return <button type="button" onClick={onClick} className={cx('min-h-10 cursor-pointer rounded-xl px-3 py-2 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300', active ? 'bg-blue-950 text-white shadow-sm' : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-blue-50 hover:ring-blue-300')}>{children}</button>
+  return <button type="button" onClick={onClick} className={cx('min-h-10 cursor-pointer rounded-xl px-2.5 py-2 text-xs font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300 sm:px-3 sm:text-sm', active ? 'bg-blue-950 text-white shadow-sm' : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-blue-50 hover:ring-blue-300')}>{children}</button>
 }
 
 function PlanSection({ pack, language }) {
   return <PanelCard title={prepText(language, 'Plan')}>
-    <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-      <div className="space-y-4">
+    <div className="grid gap-3 xl:grid-cols-[0.9fr_1.1fr]">
+      <div className="space-y-3">
         <div>
           <h4 className="text-sm font-black text-slate-950">{t(language, 'startHere', 'Start Here')}</h4>
           <div className="mt-2"><BulletList items={pack.startHere} compact /></div>
         </div>
         <div>
           <h4 className="text-sm font-black text-slate-950">{t(language, 'practiceTasks', 'Practice Tasks')}</h4>
-          <div className="mt-2 flex flex-wrap gap-2">{safeArray(pack.practiceTasks).map((task) => <span key={task} className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold leading-5 text-slate-700 ring-1 ring-slate-200">{task}</span>)}</div>
+          <div className="mt-2 flex flex-wrap gap-1.5">{safeArray(pack.practiceTasks).map((task) => <span key={task} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold leading-5 text-slate-700 ring-1 ring-slate-200">{task}</span>)}</div>
         </div>
       </div>
       <div>
         <h4 className="text-sm font-black text-slate-950">{t(language, 'fourWeekPlan', '4-Week Plan')}</h4>
-        <div className="mt-2 space-y-2">{safeArray(pack.fourWeekPlan).map((item, index) => <div key={`${item.week}-${item.focus}`} className="grid gap-2 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200 sm:grid-cols-[4.5rem_1fr]"><span className="text-xs font-black uppercase tracking-wide text-rose-900">{item.week || `${index + 1}`}</span><span className="text-sm leading-6 text-slate-700">{item.focus}</span></div>)}</div>
+        <div className="mt-2 space-y-1.5">{safeArray(pack.fourWeekPlan).map((item, index) => <div key={`${item.week}-${item.focus}`} className="grid gap-1.5 rounded-xl bg-slate-50 p-2.5 ring-1 ring-slate-200 sm:grid-cols-[4.5rem_1fr] sm:p-3"><span className="text-xs font-black uppercase tracking-wide text-rose-900">{item.week || `${index + 1}`}</span><span className="text-sm leading-5 text-slate-700 sm:leading-6">{item.focus}</span></div>)}</div>
       </div>
     </div>
   </PanelCard>
@@ -209,7 +209,7 @@ async function copyText(text, successMessage) {
 }
 
 function PrepPackCard({ pack, onOpen, language }) {
-  return <article className="flex h-full flex-col rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300"><div className="flex-1"><p className="text-xs font-black uppercase tracking-wide text-rose-900">{t(language, pack.packType, pack.packType)}</p><h3 className="mt-1 text-lg font-black text-slate-950">{pack.eventName}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-700">{pack.bestFor}</p><div className="mt-3 flex flex-wrap gap-2">{safeArray(pack.quickTags).slice(0, 3).map((tag) => <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-black text-slate-700 ring-1 ring-slate-200">{tag}</span>)}</div></div><PrepButton onClick={() => onOpen(pack)} icon={BookOpen}>{t(language, 'openPrepPage', 'Open prep page')}</PrepButton></article>
+  return <article className="flex h-full flex-col rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 sm:p-4"><div className="flex-1"><p className="text-xs font-black uppercase tracking-wide text-rose-900">{t(language, pack.packType, pack.packType)}</p><h3 className="mt-1 text-base font-black leading-6 text-slate-950 sm:text-lg">{pack.eventName}</h3><p className="mt-1.5 line-clamp-2 text-sm leading-5 text-slate-700 sm:leading-6">{pack.bestFor}</p><div className="mt-2.5 flex flex-wrap gap-1.5">{safeArray(pack.quickTags).slice(0, 3).map((tag) => <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-black text-slate-700 ring-1 ring-slate-200">{tag}</span>)}</div></div><div className="mt-3"><PrepButton onClick={() => onOpen(pack)} icon={BookOpen}>{t(language, 'openPrepPage', 'Open prep page')}</PrepButton></div></article>
 }
 
 function PrepPackPage({ pack, onBack, language }) {
@@ -222,18 +222,18 @@ function PrepPackPage({ pack, onBack, language }) {
     setShowAllResources(false)
   }, [pack.slug])
 
-  return <div className="space-y-4">
-<section className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-<div className="mb-3 flex flex-wrap items-center gap-2">
+  return <div className="space-y-3 sm:space-y-4">
+<section className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:p-4">
+<div className="mb-2.5 flex flex-wrap items-center gap-2">
 <button type="button" onClick={onBack} className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-slate-100 px-3 py-2 text-sm font-black text-slate-700 transition hover:bg-blue-50 hover:ring-1 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"><ArrowLeft size={16} />{t(language, 'backToPrepHub', 'Back to Prep Hub')}</button>
 <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-950 ring-1 ring-amber-200">{prepText(language, SHORT_OFFICIAL_REMINDER)}</span>
 </div>
 <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
 <div>
 <p className="text-xs font-black uppercase tracking-wide text-rose-900">{t(language, pack.packType, pack.packType)}</p>
-<h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{pack.eventName}</h2>
-<p className="mt-1 max-w-3xl text-sm font-bold leading-6 text-slate-700">{pack.bestFor}</p>
-<div className="mt-2 flex flex-wrap gap-2">{safeArray(pack.quickTags).map((tag) => <span key={tag} className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-black text-blue-950 ring-1 ring-blue-100">{tag}</span>)}</div>
+<h2 className="mt-1 text-xl font-black tracking-tight text-slate-950 sm:text-3xl">{pack.eventName}</h2>
+<p className="mt-1 max-w-3xl text-sm font-bold leading-5 text-slate-700 sm:leading-6">{pack.bestFor}</p>
+<div className="mt-2 flex flex-wrap gap-1.5">{safeArray(pack.quickTags).map((tag) => <span key={tag} className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-black text-blue-950 ring-1 ring-blue-100">{tag}</span>)}</div>
 </div>
 <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[38rem]">
 <PrepButton onClick={() => copyText(packToText(pack), t(language, 'prepPackCopied', 'Prep pack copied.'))} icon={Copy}>{t(language, 'copyPrepPack', 'Copy prep pack')}</PrepButton>
@@ -242,7 +242,7 @@ function PrepPackPage({ pack, onBack, language }) {
 </div>
 </div>
 </section>
-<nav className="grid gap-2 sm:grid-cols-4" aria-label="Prep pack sections">
+<nav className="grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Prep pack sections">
 {PREP_SECTIONS.map((section) => <PrepSectionButton key={section.id} active={activeSection === section.id} onClick={() => setActiveSection(section.id)}>{prepText(language, section.label)}</PrepSectionButton>)}
 </nav>
 {activeSection === 'plan' && <PlanSection pack={pack} language={language} />}
@@ -299,5 +299,5 @@ export function PrepHub({ language }) {
 
   if (selectedPack) return <PrepPackPage pack={selectedPack} onBack={closePack} language={language} />
 
-  return <div className="space-y-5"><section className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5"><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div><div className="flex items-center gap-3"><div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-950"><BookOpen size={21} /></div><div><h2 className="text-2xl font-black tracking-tight text-slate-950">{t(language, 'prepHub', 'Prep Hub')}</h2><p className="mt-1 max-w-3xl text-sm leading-6 text-slate-600">{t(language, 'prepHubSubtitle', 'Free practice packs, source links, and officer checklists for HOSA event prep.')}</p></div></div><div className="mt-4 rounded-xl bg-amber-50 p-3 text-sm font-bold leading-6 text-amber-950 ring-1 ring-amber-200">{t(language, 'prepHubDisclaimer', 'These are unofficial Wheeler HOSA prep supports. Always verify official HOSA guidelines and Georgia SLC requirements with the Wheeler advisor.')}</div></div><div className="grid gap-3 sm:grid-cols-2 lg:min-w-[28rem]"><label className="block"><span className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-600">{t(language, 'searchPacks', 'Search packs')}</span><div className="relative"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t(language, 'searchPacks', 'Search packs')} className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm outline-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-300" /></div></label><label className="block"><span className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-600">{t(language, 'filterByType', 'Filter by type')}</span><select value={category} onChange={(event) => setCategory(event.target.value)} className="h-11 w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 outline-none transition hover:border-blue-300 hover:bg-blue-50 focus:ring-2 focus:ring-blue-300">{PACK_FILTERS.map((filter) => <option key={filter} value={filter}>{t(language, filter, filter)}</option>)}</select></label></div></div></section><section className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{filteredPacks.map((pack) => <PrepPackCard key={pack.slug} pack={pack} onOpen={openPack} language={language} />)}</section></div>
+  return <div className="space-y-4 sm:space-y-5"><section className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:p-5"><div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between"><div><div className="flex items-center gap-3"><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-950 sm:h-11 sm:w-11"><BookOpen size={21} /></div><div><h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">{t(language, 'prepHub', 'Prep Hub')}</h2><p className="mt-0.5 max-w-3xl text-sm leading-5 text-slate-600 sm:leading-6">{t(language, 'prepHubSubtitle', 'Free practice packs, source links, and officer checklists for HOSA event prep.')}</p></div></div><div className="mt-3 rounded-xl bg-amber-50 p-2.5 text-xs font-bold leading-5 text-amber-950 ring-1 ring-amber-200 sm:p-3 sm:text-sm sm:leading-6">{t(language, 'prepHubDisclaimer', 'These are unofficial Wheeler HOSA prep supports. Always verify official HOSA guidelines and Georgia SLC requirements with the Wheeler advisor.')}</div></div><div className="grid gap-2 sm:grid-cols-2 lg:min-w-[28rem]"><label className="block"><span className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-600">{t(language, 'searchPacks', 'Search packs')}</span><div className="relative"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t(language, 'searchPacks', 'Search packs')} className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm outline-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-300 sm:h-11" /></div></label><label className="block"><span className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-600">{t(language, 'filterByType', 'Filter by type')}</span><select value={category} onChange={(event) => setCategory(event.target.value)} className="h-10 w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 outline-none transition hover:border-blue-300 hover:bg-blue-50 focus:ring-2 focus:ring-blue-300 sm:h-11">{PACK_FILTERS.map((filter) => <option key={filter} value={filter}>{t(language, filter, filter)}</option>)}</select></label></div></div></section><section className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{filteredPacks.map((pack) => <PrepPackCard key={pack.slug} pack={pack} onOpen={openPack} language={language} />)}</section></div>
 }
