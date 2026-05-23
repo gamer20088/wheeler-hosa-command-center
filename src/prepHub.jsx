@@ -10,14 +10,32 @@ const RESOURCE_GROUP_ORDER = ['Official Rules', 'Learn', 'Practice', 'Research',
 const RESOURCE_TYPE_LABELS_ES = {
   'Official Rules': 'Reglas oficiales',
   Learn: 'Aprender',
-  Practice: 'Práctica',
-  Research: 'Investigación',
+  Practice: 'Practica',
+  Research: 'Investigacion',
   Examples: 'Ejemplos',
   Career: 'Carrera',
-  'Spanish-Friendly': 'Recursos en español',
+  'Spanish-Friendly': 'Recursos en espanol',
 }
 const RESOURCE_LINK_NOTE = 'Links open outside this portal. Use them for study, examples, and background. Always verify official HOSA rules separately.'
-const RESOURCE_LINK_NOTE_ES = 'Los enlaces abren fuera de este portal. Úsalos para estudiar, buscar ejemplos y entender el tema. Verifica siempre las reglas oficiales de HOSA por separado.'
+const RESOURCE_LINK_NOTE_ES = 'Los enlaces abren fuera de este portal. Usalos para estudiar, buscar ejemplos y entender el tema. Verifica siempre las reglas oficiales de HOSA por separado.'
+const PREP_SECTIONS = [
+  { id: 'plan', label: 'Plan' },
+  { id: 'resources', label: 'Resources' },
+  { id: 'proof', label: 'Proof' },
+  { id: 'mock', label: 'Mock + Watch Outs' },
+]
+const SHORT_OFFICIAL_REMINDER = 'Unofficial prep support. Verify official HOSA and Georgia SLC rules with your advisor.'
+const PREP_DENSITY_LABELS_ES = {
+  Plan: 'Plan',
+  Resources: 'Recursos',
+  Proof: 'Evidencia',
+  'Mock + Watch Outs': 'Practica + cuidados',
+  'Show all resources': 'Mostrar todos los recursos',
+  'Show fewer resources': 'Mostrar menos recursos',
+  'Save this': 'Guarda esto',
+  'Officer checks': 'Revision de oficiales',
+  [SHORT_OFFICIAL_REMINDER]: 'Apoyo de preparacion no oficial. Verifica las reglas oficiales de HOSA y del SLC de Georgia con tu asesor.',
+}
 
 function scrollToTop() {
   if (typeof window === 'undefined') return
@@ -36,12 +54,17 @@ function resourceTypeLabel(language, type) {
   return language === 'es' ? RESOURCE_TYPE_LABELS_ES[type] || type : type
 }
 
-function SectionCard({ title, children }) {
-  return <section className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200"><h3 className="text-base font-black text-slate-950">{title}</h3><div className="mt-3">{children}</div></section>
+function prepText(language, value) {
+  if (language === 'es' && PREP_DENSITY_LABELS_ES[value]) return PREP_DENSITY_LABELS_ES[value]
+  return t(language, value, value)
 }
 
-function BulletList({ items }) {
-  return <div className="space-y-2">{safeArray(items).map((item) => <div key={typeof item === 'string' ? item : `${item.week}-${item.focus}`} className="flex gap-2 text-sm leading-6 text-slate-700"><CheckCircle2 size={15} className="mt-1 shrink-0 text-blue-900" /><span>{typeof item === 'string' ? item : <><span className="font-black text-slate-950">{item.week}:</span> {item.focus}</>}</span></div>)}</div>
+function PanelCard({ title, children, className }) {
+  return <section className={cx('rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200', className)}><h3 className="text-sm font-black uppercase tracking-wide text-blue-950">{title}</h3><div className="mt-3">{children}</div></section>
+}
+
+function BulletList({ items, compact = false }) {
+  return <div className={compact ? 'space-y-1.5' : 'space-y-2'}>{safeArray(items).map((item) => <div key={typeof item === 'string' ? item : `${item.week}-${item.focus}`} className="flex gap-2 text-sm leading-6 text-slate-700"><CheckCircle2 size={15} className="mt-1 shrink-0 text-blue-900" /><span>{typeof item === 'string' ? item : <><span className="font-black text-slate-950">{item.week}:</span> {item.focus}</>}</span></div>)}</div>
 }
 
 function PrepButton({ children, onClick, href, variant = 'primary', icon: Icon }) {
@@ -66,9 +89,73 @@ function groupResources(resources) {
 
 function ResourceCard({ resource, language }) {
   const isLocalNote = resource.url === '#'
-  const content = <><span className="flex items-start justify-between gap-3 text-sm font-black text-slate-950"><span>{resource.label}</span>{!isLocalNote && <ExternalLink size={15} className="mt-0.5 shrink-0 text-blue-950" />}</span><span className="mt-2 inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-black text-blue-950 ring-1 ring-blue-100">{resourceTypeLabel(language, resource.type || 'Learn')}</span><span className="mt-2 block text-sm leading-6 text-slate-600">{resource.why}</span></>
-  if (isLocalNote) return <div className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">{content}</div>
-  return <a href={resource.url} target="_blank" rel="noreferrer" className="block cursor-pointer rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300">{content}</a>
+  const content = <><span className="flex items-start justify-between gap-3 text-sm font-black text-slate-950"><span>{resource.label}</span><span className="inline-flex shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-black text-blue-950 ring-1 ring-blue-100">{resourceTypeLabel(language, resource.type || 'Learn')}</span></span><span className="mt-1.5 line-clamp-2 block text-sm leading-5 text-slate-600">{resource.why}</span>{!isLocalNote && <ExternalLink size={14} className="absolute right-3 bottom-3 text-blue-950" />}</>
+  if (isLocalNote) return <div className="relative rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">{content}</div>
+  return <a href={resource.url} target="_blank" rel="noreferrer" className="relative block cursor-pointer rounded-xl bg-slate-50 p-3 pr-9 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300">{content}</a>
+}
+
+function PrepSectionButton({ active, children, onClick }) {
+  return <button type="button" onClick={onClick} className={cx('min-h-10 cursor-pointer rounded-xl px-3 py-2 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300', active ? 'bg-blue-950 text-white shadow-sm' : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-blue-50 hover:ring-blue-300')}>{children}</button>
+}
+
+function PlanSection({ pack, language }) {
+  return <PanelCard title={prepText(language, 'Plan')}>
+    <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
+      <div className="space-y-4">
+        <div>
+          <h4 className="text-sm font-black text-slate-950">{t(language, 'startHere', 'Start Here')}</h4>
+          <div className="mt-2"><BulletList items={pack.startHere} compact /></div>
+        </div>
+        <div>
+          <h4 className="text-sm font-black text-slate-950">{t(language, 'practiceTasks', 'Practice Tasks')}</h4>
+          <div className="mt-2 flex flex-wrap gap-2">{safeArray(pack.practiceTasks).map((task) => <span key={task} className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold leading-5 text-slate-700 ring-1 ring-slate-200">{task}</span>)}</div>
+        </div>
+      </div>
+      <div>
+        <h4 className="text-sm font-black text-slate-950">{t(language, 'fourWeekPlan', '4-Week Plan')}</h4>
+        <div className="mt-2 space-y-2">{safeArray(pack.fourWeekPlan).map((item, index) => <div key={`${item.week}-${item.focus}`} className="grid gap-2 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200 sm:grid-cols-[4.5rem_1fr]"><span className="text-xs font-black uppercase tracking-wide text-rose-900">{item.week || `${index + 1}`}</span><span className="text-sm leading-6 text-slate-700">{item.focus}</span></div>)}</div>
+      </div>
+    </div>
+  </PanelCard>
+}
+
+function ResourcesSection({ resourceGroups, showAllResources, setShowAllResources, language }) {
+  const flatResources = resourceGroups.flatMap(([, resources]) => resources)
+  const visibleResources = showAllResources ? flatResources : flatResources.slice(0, 5)
+  const visibleGroups = groupResources(visibleResources)
+  const hasMoreResources = flatResources.length > 5
+  return <PanelCard title={prepText(language, 'Resources')}>
+    <div className="space-y-3">{visibleGroups.map(([type, resources]) => <div key={type}>
+      <h4 className="mb-2 text-xs font-black uppercase tracking-wide text-rose-900">{resourceTypeLabel(language, type)}</h4>
+      <div className="grid gap-2 lg:grid-cols-2">{resources.map((resource) => <ResourceCard key={`${resource.label}-${resource.url}`} resource={resource} language={language} />)}</div>
+    </div>)}</div>
+    {hasMoreResources && <button type="button" onClick={() => setShowAllResources((current) => !current)} className="mt-4 inline-flex cursor-pointer rounded-xl bg-white px-3 py-2 text-sm font-black text-blue-950 ring-1 ring-blue-200 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300">{prepText(language, showAllResources ? 'Show fewer resources' : 'Show all resources')}</button>}
+    <p className="mt-4 rounded-xl bg-blue-50 p-3 text-xs font-bold leading-5 text-blue-950 ring-1 ring-blue-100">{language === 'es' ? RESOURCE_LINK_NOTE_ES : RESOURCE_LINK_NOTE}</p>
+  </PanelCard>
+}
+
+function ProofSection({ pack, language }) {
+  return <PanelCard title={prepText(language, 'Proof')}>
+    <div className="grid gap-4 lg:grid-cols-2">
+      <div><h4 className="text-sm font-black text-slate-950">{prepText(language, 'Save this')}</h4><div className="mt-2"><BulletList items={pack.evidenceToSave} compact /></div></div>
+      <div><h4 className="text-sm font-black text-slate-950">{prepText(language, 'Officer checks')}</h4><div className="mt-2"><BulletList items={pack.officerChecklist} compact /></div></div>
+    </div>
+  </PanelCard>
+}
+
+function MockWatchSection({ pack, language }) {
+  return <PanelCard title={prepText(language, 'Mock + Watch Outs')}>
+    <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+      <div>
+        <h4 className="text-sm font-black text-slate-950">{t(language, 'mockPracticeRubric', 'Mock Practice Rubric')}</h4>
+        <div className="mt-2 divide-y divide-slate-200 overflow-hidden rounded-xl bg-slate-50 ring-1 ring-slate-200">{safeArray(pack.mockRubric).map((item) => <div key={item.category} className="grid gap-1 p-3 sm:grid-cols-[8rem_1fr]"><p className="text-sm font-black text-slate-950">{item.category}</p><p className="text-sm leading-6 text-slate-700">{item.lookFor}</p></div>)}</div>
+      </div>
+      <div>
+        <h4 className="text-sm font-black text-slate-950">{t(language, 'watchOuts', 'Watch Outs')}</h4>
+        <div className="mt-2 rounded-xl bg-amber-50 p-3 ring-1 ring-amber-200"><BulletList items={pack.watchOuts} compact /></div>
+      </div>
+    </div>
+  </PanelCard>
 }
 
 function packToText(pack) {
@@ -126,41 +213,42 @@ function PrepPackCard({ pack, onOpen, language }) {
 }
 
 function PrepPackPage({ pack, onBack, language }) {
+  const [activeSection, setActiveSection] = useState('plan')
+  const [showAllResources, setShowAllResources] = useState(false)
   const resourceGroups = groupResources(getResourcesForPack(pack))
-  return <div className="space-y-5">
-<section className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5">
-<button type="button" onClick={onBack} className="mb-4 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-slate-100 px-3 py-2 text-sm font-black text-slate-700 transition hover:bg-blue-50 hover:ring-1 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"><ArrowLeft size={16} />{t(language, 'backToPrepHub', 'Back to Prep Hub')}</button>
-<div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+
+  useEffect(() => {
+    setActiveSection('plan')
+    setShowAllResources(false)
+  }, [pack.slug])
+
+  return <div className="space-y-4">
+<section className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+<div className="mb-3 flex flex-wrap items-center gap-2">
+<button type="button" onClick={onBack} className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-slate-100 px-3 py-2 text-sm font-black text-slate-700 transition hover:bg-blue-50 hover:ring-1 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"><ArrowLeft size={16} />{t(language, 'backToPrepHub', 'Back to Prep Hub')}</button>
+<span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-950 ring-1 ring-amber-200">{prepText(language, SHORT_OFFICIAL_REMINDER)}</span>
+</div>
+<div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
 <div>
 <p className="text-xs font-black uppercase tracking-wide text-rose-900">{t(language, pack.packType, pack.packType)}</p>
-<h2 className="mt-1 text-3xl font-black tracking-tight text-slate-950">{pack.eventName}</h2>
-<p className="mt-2 max-w-3xl text-sm font-bold leading-6 text-slate-700">{pack.bestFor}</p>
-<div className="mt-3 flex flex-wrap gap-2">{safeArray(pack.quickTags).map((tag) => <span key={tag} className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-950 ring-1 ring-blue-100">{tag}</span>)}</div>
+<h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{pack.eventName}</h2>
+<p className="mt-1 max-w-3xl text-sm font-bold leading-6 text-slate-700">{pack.bestFor}</p>
+<div className="mt-2 flex flex-wrap gap-2">{safeArray(pack.quickTags).map((tag) => <span key={tag} className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-black text-blue-950 ring-1 ring-blue-100">{tag}</span>)}</div>
 </div>
-<div className="grid gap-2 sm:grid-cols-3 lg:min-w-96 lg:grid-cols-1">
+<div className="grid gap-2 sm:grid-cols-3 lg:min-w-[38rem]">
 <PrepButton onClick={() => copyText(packToText(pack), t(language, 'prepPackCopied', 'Prep pack copied.'))} icon={Copy}>{t(language, 'copyPrepPack', 'Copy prep pack')}</PrepButton>
 <PrepButton onClick={() => copyText(checklistToText(pack), t(language, 'officerChecklistCopied', 'Officer checklist copied.'))} variant="light" icon={ClipboardCheck}>{t(language, 'copyOfficerChecklist', 'Copy officer checklist')}</PrepButton>
 <PrepButton href={PORTAL_LINKS.officialGuidelines} variant="light" icon={ExternalLink}>{t(language, 'openOfficialHosaGuidelines', 'Open official HOSA guidelines')}</PrepButton>
 </div>
 </div>
-<div className="mt-4 rounded-xl bg-amber-50 p-3 text-sm font-bold leading-6 text-amber-950 ring-1 ring-amber-200"><span className="font-black">{t(language, 'officialReminder', 'Official reminder')}:</span> {pack.officialReminder}</div>
 </section>
-<div className="grid gap-4 lg:grid-cols-2">
-<SectionCard title={t(language, 'startHere', 'Start Here')}><BulletList items={pack.startHere} /></SectionCard>
-<SectionCard title={t(language, 'fourWeekPlan', '4-Week Plan')}><BulletList items={pack.fourWeekPlan} /></SectionCard>
-<SectionCard title={t(language, 'practiceTasks', 'Practice Tasks')}><BulletList items={pack.practiceTasks} /></SectionCard>
-<SectionCard title={t(language, 'freeResources', 'Free Resources')}>
-<div className="space-y-4">{resourceGroups.map(([type, resources]) => <div key={type}>
-<h4 className="mb-2 text-xs font-black uppercase tracking-wide text-rose-900">{resourceTypeLabel(language, type)}</h4>
-<div className="space-y-2">{resources.map((resource) => <ResourceCard key={`${resource.label}-${resource.url}`} resource={resource} language={language} />)}</div>
-</div>)}</div>
-<p className="mt-4 rounded-xl bg-blue-50 p-3 text-xs font-bold leading-5 text-blue-950 ring-1 ring-blue-100">{language === 'es' ? RESOURCE_LINK_NOTE_ES : RESOURCE_LINK_NOTE}</p>
-</SectionCard>
-<SectionCard title={t(language, 'evidenceToSave', 'Evidence to Save')}><BulletList items={pack.evidenceToSave} /></SectionCard>
-<SectionCard title={t(language, 'officerReviewChecklist', 'Officer Review Checklist')}><BulletList items={pack.officerChecklist} /></SectionCard>
-<SectionCard title={t(language, 'mockPracticeRubric', 'Mock Practice Rubric')}><div className="space-y-2">{safeArray(pack.mockRubric).map((item) => <div key={item.category} className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200"><p className="text-sm font-black text-slate-950">{item.category}</p><p className="mt-1 text-sm leading-6 text-slate-700">{item.lookFor}</p></div>)}</div></SectionCard>
-<SectionCard title={t(language, 'watchOuts', 'Watch Outs')}><BulletList items={pack.watchOuts} /></SectionCard>
-</div>
+<nav className="grid gap-2 sm:grid-cols-4" aria-label="Prep pack sections">
+{PREP_SECTIONS.map((section) => <PrepSectionButton key={section.id} active={activeSection === section.id} onClick={() => setActiveSection(section.id)}>{prepText(language, section.label)}</PrepSectionButton>)}
+</nav>
+{activeSection === 'plan' && <PlanSection pack={pack} language={language} />}
+{activeSection === 'resources' && <ResourcesSection resourceGroups={resourceGroups} showAllResources={showAllResources} setShowAllResources={setShowAllResources} language={language} />}
+{activeSection === 'proof' && <ProofSection pack={pack} language={language} />}
+{activeSection === 'mock' && <MockWatchSection pack={pack} language={language} />}
 </div>
 }
 
