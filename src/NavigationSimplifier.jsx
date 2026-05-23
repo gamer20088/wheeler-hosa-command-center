@@ -30,7 +30,7 @@ const LOCAL_LABELS = {
 }
 
 const UTILITY_BUTTON_CLASS =
-  'inline-flex min-h-10 shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-white px-3 py-2 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300'
+  'inline-flex min-h-10 shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-white px-2.5 py-2 text-xs font-bold text-slate-900 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300 sm:px-3 sm:text-sm'
 
 function label(language, key, fallback) {
   return LOCAL_LABELS[language]?.[key] || t(language, key, fallback)
@@ -129,8 +129,16 @@ function isActive(button) {
 }
 
 function updateNavGrid(nav) {
+  nav.dataset.mobileCompressedNav = 'true'
   nav.classList.remove('lg:grid-cols-7')
   nav.classList.add('lg:grid-cols-5')
+}
+
+function compressHeader() {
+  const header = document.querySelector('[data-portal-root] header')
+  const headerInner = header?.firstElementChild
+  if (header) header.dataset.mobileCompressedHeader = 'true'
+  if (headerInner) headerInner.dataset.mobileCompressedHeaderInner = 'true'
 }
 
 function updateOfficerToolsAction(language, officerButton) {
@@ -191,10 +199,10 @@ function updateBrowseEventsHandoff(language, main, finderButton, libraryButton) 
   const bar = document.createElement('div')
   bar.dataset.finderBrowseBar = 'true'
   bar.className =
-    'mb-4 flex flex-col gap-2 rounded-xl bg-blue-50 px-3 py-2 ring-1 ring-blue-100 sm:flex-row sm:items-center sm:justify-between'
+    'mb-3 flex flex-col gap-2 rounded-xl bg-blue-50 px-3 py-2 ring-1 ring-blue-100 sm:flex-row sm:items-center sm:justify-between'
 
   const note = document.createElement('p')
-  note.className = 'text-sm font-bold text-slate-700'
+  note.className = 'text-xs font-bold leading-5 text-slate-700 sm:text-sm'
   note.textContent = noteText
   bar.appendChild(note)
   bar.appendChild(makeBrowseEventsButton(buttonLabel, () => libraryButton.click()))
@@ -206,6 +214,7 @@ function simplifyNavigation() {
 
   const language = readLanguage()
   hideDuplicateLanguageToggles()
+  compressHeader()
 
   const nav = document.querySelector('nav[aria-label="Main navigation"]')
   if (!nav) return
