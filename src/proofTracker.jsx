@@ -58,16 +58,16 @@ function formatSavedDate(value) {
 }
 
 function Card({ children, className = '' }) {
-  return <section className={cx('rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5', className)}>{children}</section>
+  return <section className={cx('rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:p-5', className)}>{children}</section>
 }
 
 function SectionHeader({ icon: Icon, title, subtitle }) {
   return <div className="flex gap-3">
-<div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-950">
+<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-950 sm:h-11 sm:w-11">
 <Icon size={21} />
 </div>
 <div>
-<h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">{title}</h2>{subtitle && <p className="mt-1 text-sm leading-6 text-slate-500">{subtitle}</p>}</div>
+<h2 className="text-lg font-black tracking-tight text-slate-950 sm:text-2xl">{title}</h2>{subtitle && <p className="mt-0.5 text-sm leading-5 text-slate-500 sm:leading-6">{subtitle}</p>}</div>
 </div>
 }
 
@@ -83,13 +83,13 @@ function ProofList({ title, items, icon: Icon = CheckCircle2 }) {
 }
 
 function ProofLinkCard({ title, text, button, href, icon: Icon }) {
-  return <a href={href} className="flex min-h-32 cursor-pointer flex-col justify-between rounded-2xl bg-white p-4 text-left shadow-sm ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300">
+  return <a href={href} className="flex min-h-28 cursor-pointer flex-col justify-between rounded-2xl bg-white p-3 text-left shadow-sm ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300 sm:min-h-32 sm:p-4">
 <div>
-<div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-950">
+<div className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-950 sm:h-10 sm:w-10">
 <Icon size={19} />
 </div>
 <h3 className="text-base font-black text-slate-950">{title}</h3>
-<p className="mt-2 text-sm leading-6 text-slate-700">{text}</p>
+<p className="mt-1.5 text-sm leading-5 text-slate-700 sm:leading-6">{text}</p>
 </div>
 <span className="mt-3 inline-flex items-center gap-2 text-sm font-black text-blue-950">{button}<ExternalLink size={14} />
 </span>
@@ -100,7 +100,7 @@ function MiniButton({ children, onClick, variant = 'primary' }) {
   const styles = variant === 'light'
     ? 'bg-white text-slate-950 ring-1 ring-slate-200 hover:bg-blue-50 hover:ring-blue-300'
     : 'bg-blue-950 text-white hover:bg-blue-900'
-  return <button type="button" onClick={onClick} className={`inline-flex min-h-10 cursor-pointer items-center justify-center rounded-xl px-3 py-2 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300 ${styles}`}>{children}</button>
+  return <button type="button" onClick={onClick} className={`inline-flex min-h-10 cursor-pointer items-center justify-center rounded-xl px-3 py-2 text-xs font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300 sm:text-sm ${styles}`}>{children}</button>
 }
 
 export function getProofExamples(event = {}) {
@@ -282,7 +282,7 @@ function PracticeLog({ selectedEvent, openPrepPackForEvent, language = 'en' }) {
   }
 
   return <Card className="p-3 sm:p-4">
-<div className="flex flex-col gap-3 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between">
+<div className="flex flex-col gap-2.5 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between">
 <div className="flex gap-3">
 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-950">
 <ClipboardCheck size={19} />
@@ -294,8 +294,8 @@ function PracticeLog({ selectedEvent, openPrepPackForEvent, language = 'en' }) {
 </div>
 <MiniButton onClick={() => openPrepPackForEvent?.(selectedEvent)} variant="light">{t(language, 'openFullPrepPack', 'Open full prep pack')}</MiniButton>
 </div>
-<div className="mt-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.8fr)]">
-<div className="space-y-2.5">
+<div className="mt-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.75fr)]">
+<div className="space-y-2">
 <p className="text-xs font-bold leading-5 text-slate-500">{t(language, 'practiceLogSubtitle', 'Track practice on this device before official Google proof links are added.')}</p>
 <label className="block">
 <span className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-600">{t(language, 'practiceType', 'Practice type')}</span>
@@ -303,19 +303,19 @@ function PracticeLog({ selectedEvent, openPrepPackForEvent, language = 'en' }) {
 </label>
 <div>
 <p className="mb-1.5 text-xs font-black uppercase tracking-wide text-slate-600">{t(language, 'timerDuration', 'Timer duration')}</p>
-<div className="flex flex-wrap gap-1.5">{TIMER_DURATIONS.map((minutes) => <button key={minutes} type="button" onClick={() => updateDuration(minutes)} className={`cursor-pointer rounded-full px-3 py-1.5 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300 ${duration === minutes ? 'bg-blue-950 text-white' : 'bg-slate-100 text-slate-700 hover:bg-blue-50'}`}>{minutes} min</button>)}</div>
+<div className="grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap">{TIMER_DURATIONS.map((minutes) => <button key={minutes} type="button" onClick={() => updateDuration(minutes)} className={`min-h-9 cursor-pointer rounded-full px-2.5 py-1.5 text-xs font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300 sm:px-3 sm:text-sm ${duration === minutes ? 'bg-blue-950 text-white' : 'bg-slate-100 text-slate-700 hover:bg-blue-50'}`}>{minutes} min</button>)}</div>
 </div>
-<div className="rounded-2xl bg-blue-50 p-3 text-center ring-1 ring-blue-100">
+<div className="rounded-2xl bg-blue-50 p-2.5 text-center ring-1 ring-blue-100 sm:p-3">
 <p className="text-xs font-black uppercase tracking-wide text-blue-950">{t(language, 'remainingTime', 'Remaining time')}</p>
-<p className="mt-1 text-4xl font-black tracking-tight text-blue-950">{formatTimer(secondsLeft)}</p>{timerComplete && <p className="mt-2 rounded-xl bg-white px-3 py-2 text-sm font-black text-blue-950 ring-1 ring-blue-100">{t(language, 'timerCompleteReady', 'Timer complete. Save this practice when ready.')}</p>}<div className="mt-3 grid grid-cols-3 gap-2">
+<p className="mt-1 text-3xl font-black tracking-tight text-blue-950 sm:text-4xl">{formatTimer(secondsLeft)}</p>{timerComplete && <p className="mt-2 rounded-xl bg-white px-3 py-2 text-sm font-black text-blue-950 ring-1 ring-blue-100">{t(language, 'timerCompleteReady', 'Timer complete. Save this practice when ready.')}</p>}<div className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2">
 <MiniButton onClick={startTimer}>{t(language, 'start', 'Start')}</MiniButton>
 <MiniButton onClick={() => setRunning(false)} variant="light">{t(language, 'pause', 'Pause')}</MiniButton>
 <MiniButton onClick={resetTimer} variant="light">{t(language, 'reset', 'Reset')}</MiniButton>
 </div>
-<div className="mt-2 flex flex-col gap-2 rounded-xl bg-white p-2.5 text-left ring-1 ring-blue-100 sm:flex-row sm:items-center sm:justify-between">
+<div className="mt-2 flex flex-col gap-2 rounded-xl bg-white p-2 text-left ring-1 ring-blue-100 sm:flex-row sm:items-center sm:justify-between sm:p-2.5">
 <label className="flex cursor-pointer items-center gap-2 text-sm font-black text-slate-700">
 <input type="checkbox" checked={soundOn} onChange={(event) => setSoundOn(event.target.checked)} className="h-4 w-4 cursor-pointer accent-blue-950" />{t(language, 'soundAlertOn', 'Sound alert on')}</label>
-<button type="button" onClick={() => { timerArmedRef.current = true; void playTimerChime() }} className="w-fit cursor-pointer rounded-lg bg-white px-3 py-1.5 text-xs font-black text-blue-950 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300">{t(language, 'testSound', 'Test sound')}</button>
+<button type="button" onClick={() => { timerArmedRef.current = true; void playTimerChime() }} className="w-full cursor-pointer rounded-lg bg-white px-3 py-1.5 text-xs font-black text-blue-950 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300 sm:w-fit">{t(language, 'testSound', 'Test sound')}</button>
 </div>
 </div>
 <label className="block">
@@ -328,7 +328,7 @@ function PracticeLog({ selectedEvent, openPrepPackForEvent, language = 'en' }) {
 <p className="text-xs font-bold leading-5 text-slate-500">{t(language, 'savedDeviceOfficialProof', 'Saved on this device only. Official proof still needs to be submitted through the weekly proof form once links are added.')}</p>
 </div>
 </div>
-<div className="rounded-2xl bg-slate-50 p-3 ring-1 ring-slate-200">
+<div className="rounded-2xl bg-slate-50 p-2.5 ring-1 ring-slate-200 sm:p-3">
 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 <div>
 <p className="text-xs font-black uppercase tracking-wide text-blue-950">{t(language, 'recentPractice', 'Recent practice')}</p>
@@ -339,7 +339,7 @@ function PracticeLog({ selectedEvent, openPrepPackForEvent, language = 'en' }) {
 <MiniButton onClick={clearPracticeLog} variant="light">{t(language, 'clearPracticeLog', 'Clear practice log')}</MiniButton>
 </div>
 </div>
-<div className="mt-3 space-y-2">{recentEntries.length ? recentEntries.map((entry) => <div key={`${entry.savedAt}-${entry.practiceType}`} className="rounded-xl bg-white p-2.5 ring-1 ring-slate-200">
+<div className="mt-2.5 space-y-2">{recentEntries.length ? recentEntries.map((entry) => <div key={`${entry.savedAt}-${entry.practiceType}`} className="rounded-xl bg-white p-2.5 ring-1 ring-slate-200">
 <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
 <div>
 <p className="text-sm font-black text-slate-950">{entry.practiceType}</p>
@@ -355,11 +355,11 @@ function PracticeLog({ selectedEvent, openPrepPackForEvent, language = 'en' }) {
 export function ProofTracker({ selectedEvent, openPrepPackForEvent, language = 'en' }) {
   const [activePanel, setActivePanel] = useState('practice')
   const proofCounts = ['quiz score or practice test screenshot', 'writing draft or outline', 'speech recording', 'poster or portfolio draft', 'campaign evidence', 'photo/video proof of practice', 'mock round notes', 'study log or reflection', 'officer-reviewed checklist']
-  return <div className="space-y-5">
+  return <div className="space-y-4 sm:space-y-5">
 <Card className="p-3 sm:p-4">
 <SectionHeader icon={ClipboardCheck} title={t(language, 'proofTracker', 'Proof Tracker')} subtitle={t(language, 'proofTrackerSubtitle', 'Student weekly proof submission hub.')} />
 <p className="mt-2 max-w-3xl text-sm font-bold leading-5 text-slate-700">{t(language, 'proofTrackerCompactHelp', 'Practice, log evidence, and submit proof.')}</p>
-<div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">{PROOF_PANELS.map(([id, label, description]) => <button key={id} type="button" aria-pressed={activePanel === id} onClick={() => setActivePanel(id)} className={`cursor-pointer rounded-xl px-3 py-2 text-left transition focus:outline-none focus:ring-2 focus:ring-blue-300 ${activePanel === id ? 'border-l-4 border-rose-800 bg-blue-950 text-white ring-1 ring-blue-950' : 'bg-slate-50 text-slate-950 ring-1 ring-slate-200 hover:bg-blue-50 hover:ring-blue-300'}`}>
+<div className="mt-3 grid grid-cols-2 gap-2 xl:grid-cols-4">{PROOF_PANELS.map(([id, label, description]) => <button key={id} type="button" aria-pressed={activePanel === id} onClick={() => setActivePanel(id)} className={`min-h-14 cursor-pointer rounded-xl px-2.5 py-2 text-left transition focus:outline-none focus:ring-2 focus:ring-blue-300 sm:px-3 ${activePanel === id ? 'border-l-4 border-rose-800 bg-blue-950 text-white ring-1 ring-blue-950' : 'bg-slate-50 text-slate-950 ring-1 ring-slate-200 hover:bg-blue-50 hover:ring-blue-300'}`}>
 <span className="block text-sm font-black">{t(language, `proofPanel.${id}`, label)}</span>
 <span className={`mt-0.5 block text-[11px] font-bold leading-4 ${activePanel === id ? 'text-blue-100' : 'text-slate-500'}`}>{t(language, `proofPanel.${id}.description`, description)}</span>
 </button>)}</div>
