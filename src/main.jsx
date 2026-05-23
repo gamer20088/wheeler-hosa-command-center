@@ -5,6 +5,7 @@ import StudentPortal from './StudentPortal.jsx'
 import { LanguageShell } from './LanguageShell.jsx'
 import { NavigationSimplifier } from './NavigationSimplifier.jsx'
 import { SiteFooter } from './SiteFooter.jsx'
+import { FirstVisitOnboarding } from './FirstVisitOnboarding.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')).render(
       <NavigationSimplifier>
         <StudentPortal />
         <SiteFooter />
+        <FirstVisitOnboarding />
       </NavigationSimplifier>
     </LanguageShell>
   </StrictMode>,
