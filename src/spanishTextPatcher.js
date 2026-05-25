@@ -100,6 +100,13 @@ const TEXT_PATCHES = {
   'Recent practice': 'Práctica reciente',
   'Copy practice summary': 'Copiar resumen',
   'Clear practice log': 'Borrar registro',
+  'Verifica guias oficiales': 'Verifica guías oficiales',
+  'Abrir guias oficiales': 'Abrir guías oficiales',
+  'Acerca de / Creditos': 'Acerca de / Créditos',
+  'Version beta': 'Versión beta',
+  'informacion medica': 'información médica',
+  'registrar practica': 'registrar práctica',
+  'preparacion de Wheeler HOSA': 'preparación de Wheeler HOSA',
   'Guias oficiales': 'Guías oficiales',
   'Centro de preparacion': 'Centro de preparación',
   Informacion: 'Información',
@@ -120,6 +127,12 @@ const TEXT_PATCHES = {
   despues: 'después',
   aqui: 'aquí',
   todavia: 'todavía',
+  'Practica + cuidados': 'Práctica + cuidados',
+  'Investigacion': 'Investigación',
+  'En espanol': 'En español',
+  'Usalos para estudiar y buscar ejemplos.': 'Úsalos para estudiar y buscar ejemplos.',
+  'Usa Investigacion si necesitas evidencia mas fuerte.': 'Usa Investigación si necesitas evidencia más fuerte.',
+  'Revision de oficiales': 'Revisión de oficiales',
 }
 
 function patchTextValue(value) {
