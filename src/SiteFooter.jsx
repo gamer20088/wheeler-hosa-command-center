@@ -23,17 +23,17 @@ const TEXT = {
   es: {
     footerLabel: 'Portal no oficial creado por estudiante',
     credit: 'Creado y mantenido por Arda Madanoglu',
-    verify: 'Verifica las guias oficiales de HOSA y las reglas del SLC de Georgia con el asesor de Wheeler',
+    verify: 'Verifica guias oficiales y reglas del SLC con el asesor',
     about: 'Acerca de / Creditos',
     title: 'Acerca de este portal',
     body:
-      'Wheeler HOSA Competition Portal es una herramienta no oficial de preparacion creada por estudiante para ayudar a explorar eventos, abrir paquetes de preparacion, registrar practica y prepararse para el SLC de Georgia.',
+      'Este portal no es un sistema oficial de HOSA, Georgia HOSA ni Wheeler. Sirve para escoger eventos, abrir recursos y registrar practica.',
     creditLine: 'Creado y mantenido por Arda Madanoglu.',
     disclaimer:
-      'Este portal no es un sistema oficial de HOSA, Georgia HOSA ni de inscripcion escolar. Verifica siempre las guias oficiales del evento, fechas limite, codigo de vestimenta, reglas de entrega y procedimientos del SLC de Georgia con el asesor de Wheeler y fuentes oficiales de HOSA.',
+      'Verifica siempre reglas, fechas y requisitos con el asesor y fuentes oficiales.',
     privacy:
-      'Este sitio puede guardar eventos seleccionados, registros locales de practica y listas de preparacion en el dispositivo del estudiante. No ingreses informacion medica, de salud personal, familiar o privada.',
-    version: 'Version beta para la preparacion de competencias de Wheeler HOSA.',
+      'Este sitio guarda algunas selecciones y notas en tu dispositivo. No escribas informacion medica, familiar o privada.',
+    version: 'Version beta para preparacion de Wheeler HOSA.',
     close: 'Cerrar',
     guidelines: 'Abrir guias oficiales',
   },
