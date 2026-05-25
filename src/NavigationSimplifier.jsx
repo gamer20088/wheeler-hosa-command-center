@@ -63,20 +63,30 @@ const TEXT_REPLACEMENTS = [
     "No local practice entries yet. After practice, save a note like '20 min flashcards' or '30 min speech draft.'",
     "Todavia no hay practicas locales. Despues de practicar, guarda una nota como '20 min de tarjetas' o '30 min de borrador de discurso.'",
   ],
+  ['Open Prep Hub', 'Open Prep Hub', 'Abrir Centro de preparacion'],
+  ['Go to Proof Tracker', 'Go to Proof Tracker', 'Ir a evidencia'],
+  ['Open Prep Pack', 'Open Prep Pack', 'Abrir paquete'],
+  ['Proof Tracker', 'Proof Tracker', 'Registro de evidencia'],
+  ['Practice Timer', 'Practice Timer', 'Temporizador'],
+  ['Proof Examples', 'Proof Examples', 'Ejemplos'],
+  ['Privacy + Code', 'Privacy + Code', 'Privacidad'],
+  ['Start with Find Event', 'Start with Find Event', 'Empezar con el buscador'],
+  ['Practice and submit proof', 'Practice and submit proof', 'Practica y entrega evidencia'],
+  ['Unofficial prep support. Verify official rules with your advisor.', SHORT_WARNING_EN, SHORT_WARNING_ES],
 ]
 
 const LOCAL_LABELS = {
   es: {
     findEvent: 'Encontrar evento',
     browseAllEvents: 'Ver todos los eventos',
-    eventFinderDiscoveryNote: 'Usa el cuestionario primero, o revisa todos los eventos si ya sabes lo que quieres.',
+    eventFinderDiscoveryNote: 'Haz el quiz primero o revisa todos los eventos si ya sabes que buscas.',
     officerTools: 'Herramientas de oficiales',
     openPrepHub: 'Abrir Centro de preparacion',
-    goToProofTracker: 'Ir al registro de evidencia',
-    openPrepPack: 'Abrir paquete de preparacion',
+    goToProofTracker: 'Ir a evidencia',
+    openPrepPack: 'Abrir paquete',
     proofLinks: 'Enlaces de evidencia',
-    resourceHelper: 'Empieza con una fuente de Aprender. Usa enlaces de Investigacion cuando necesites evidencia mas fuerte.',
-    noPracticeExample: "Todavia no hay practicas locales. Despues de practicar, guarda una nota como '20 min de tarjetas' o '30 min de borrador de discurso.'",
+    resourceHelper: 'Empieza con Aprender. Usa Investigacion si necesitas evidencia mas fuerte.',
+    noPracticeExample: "Todavia no hay practicas. Guarda una nota como '20 min tarjetas' o '30 min discurso'.",
   },
 }
 
