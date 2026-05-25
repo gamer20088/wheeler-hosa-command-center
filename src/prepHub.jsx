@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, BookOpen, CheckCircle2, ClipboardCheck, Copy, ExternalLink, Search } from 'lucide-react'
 import { EVENT_PREP_PACKS } from './eventPrepPacks.js'
 import { getResourcesForPack } from './prepResourceLinks.js'
+import { getSpanishPackCopy, getSpanishResource } from './spanishPrepCopy.js'
 import { PORTAL_LINKS } from './portalConfig.js'
 import { t } from './i18n.js'
 
@@ -14,17 +15,19 @@ const RESOURCE_TYPE_LABELS_ES = {
   Research: 'Investigacion',
   Examples: 'Ejemplos',
   Career: 'Carrera',
-  'Spanish-Friendly': 'Recursos en espanol',
+  'Spanish-Friendly': 'En espanol',
 }
 const RESOURCE_LINK_NOTE = 'Links open outside this portal. Use them for study, examples, and background. Always verify official HOSA rules separately.'
-const RESOURCE_LINK_NOTE_ES = 'Los enlaces abren fuera de este portal. Usalos para estudiar, buscar ejemplos y entender el tema. Verifica siempre las reglas oficiales de HOSA por separado.'
+const RESOURCE_LINK_NOTE_ES = 'Los enlaces abren fuera del portal. Usalos para estudiar y buscar ejemplos. Verifica las reglas oficiales aparte.'
+const RESOURCE_HELPER = 'Start with a Learn source. Use Research links when you need stronger evidence.'
+const RESOURCE_HELPER_ES = 'Empieza con Aprender. Usa Investigacion si necesitas evidencia mas fuerte.'
 const PREP_SECTIONS = [
   { id: 'plan', label: 'Plan' },
   { id: 'resources', label: 'Resources' },
   { id: 'proof', label: 'Proof' },
   { id: 'mock', label: 'Mock + Watch Outs' },
 ]
-const SHORT_OFFICIAL_REMINDER = 'Unofficial prep support. Verify official HOSA and Georgia SLC rules with your advisor.'
+const SHORT_OFFICIAL_REMINDER = 'Unofficial prep support. Verify official rules with your advisor.'
 const PREP_DENSITY_LABELS_ES = {
   Plan: 'Plan',
   Resources: 'Recursos',
@@ -34,7 +37,7 @@ const PREP_DENSITY_LABELS_ES = {
   'Show fewer resources': 'Mostrar menos recursos',
   'Save this': 'Guarda esto',
   'Officer checks': 'Revision de oficiales',
-  [SHORT_OFFICIAL_REMINDER]: 'Apoyo de preparacion no oficial. Verifica las reglas oficiales de HOSA y del SLC de Georgia con tu asesor.',
+  [SHORT_OFFICIAL_REMINDER]: 'Apoyo no oficial. Verifica las reglas con tu asesor.',
 }
 
 function scrollToTop() {
@@ -57,6 +60,15 @@ function resourceTypeLabel(language, type) {
 function prepText(language, value) {
   if (language === 'es' && PREP_DENSITY_LABELS_ES[value]) return PREP_DENSITY_LABELS_ES[value]
   return t(language, value, value)
+}
+
+function displayPack(pack, language) {
+  return language === 'es' ? getSpanishPackCopy(pack) : pack
+}
+
+function displayResources(pack, language) {
+  const resources = getResourcesForPack(pack)
+  return language === 'es' ? resources.map(getSpanishResource) : resources
 }
 
 function PanelCard({ title, children, className }) {
@@ -125,6 +137,7 @@ function ResourcesSection({ resourceGroups, showAllResources, setShowAllResource
   const visibleGroups = groupResources(visibleResources)
   const hasMoreResources = flatResources.length > 5
   return <PanelCard title={prepText(language, 'Resources')}>
+    <p className="mb-3 rounded-xl bg-blue-50 p-3 text-xs font-bold leading-5 text-blue-950 ring-1 ring-blue-100">{language === 'es' ? RESOURCE_HELPER_ES : RESOURCE_HELPER}</p>
     <div className="space-y-3">{visibleGroups.map(([type, resources]) => <div key={type}>
       <h4 className="mb-2 text-xs font-black uppercase tracking-wide text-rose-900">{resourceTypeLabel(language, type)}</h4>
       <div className="grid gap-2 lg:grid-cols-2">{resources.map((resource) => <ResourceCard key={`${resource.label}-${resource.url}`} resource={resource} language={language} />)}</div>
@@ -209,13 +222,15 @@ async function copyText(text, successMessage) {
 }
 
 function PrepPackCard({ pack, onOpen, language }) {
-  return <article className="flex h-full flex-col rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 sm:p-4"><div className="flex-1"><p className="text-xs font-black uppercase tracking-wide text-rose-900">{t(language, pack.packType, pack.packType)}</p><h3 className="mt-1 text-base font-black leading-6 text-slate-950 sm:text-lg">{pack.eventName}</h3><p className="mt-1.5 line-clamp-2 text-sm leading-5 text-slate-700 sm:leading-6">{pack.bestFor}</p><div className="mt-2.5 flex flex-wrap gap-1.5">{safeArray(pack.quickTags).slice(0, 3).map((tag) => <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-black text-slate-700 ring-1 ring-slate-200">{tag}</span>)}</div></div><div className="mt-3"><PrepButton onClick={() => onOpen(pack)} icon={BookOpen}>{t(language, 'openPrepPage', 'Open prep page')}</PrepButton></div></article>
+  const shownPack = displayPack(pack, language)
+  return <article className="flex h-full flex-col rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 sm:p-4"><div className="flex-1"><p className="text-xs font-black uppercase tracking-wide text-rose-900">{t(language, pack.packType, pack.packType)}</p><h3 className="mt-1 text-base font-black leading-6 text-slate-950 sm:text-lg">{pack.eventName}</h3><p className="mt-1.5 line-clamp-2 text-sm leading-5 text-slate-700 sm:leading-6">{shownPack.bestFor}</p><div className="mt-2.5 flex flex-wrap gap-1.5">{safeArray(shownPack.quickTags).slice(0, 3).map((tag) => <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-black text-slate-700 ring-1 ring-slate-200">{tag}</span>)}</div></div><div className="mt-3"><PrepButton onClick={() => onOpen(pack)} icon={BookOpen}>{t(language, 'openPrepPage', 'Open prep page')}</PrepButton></div></article>
 }
 
 function PrepPackPage({ pack, onBack, language }) {
   const [activeSection, setActiveSection] = useState('plan')
   const [showAllResources, setShowAllResources] = useState(false)
-  const resourceGroups = groupResources(getResourcesForPack(pack))
+  const shownPack = displayPack(pack, language)
+  const resourceGroups = groupResources(displayResources(pack, language))
 
   useEffect(() => {
     setActiveSection('plan')
@@ -232,12 +247,12 @@ function PrepPackPage({ pack, onBack, language }) {
 <div>
 <p className="text-xs font-black uppercase tracking-wide text-rose-900">{t(language, pack.packType, pack.packType)}</p>
 <h2 className="mt-1 text-xl font-black tracking-tight text-slate-950 sm:text-3xl">{pack.eventName}</h2>
-<p className="mt-1 max-w-3xl text-sm font-bold leading-5 text-slate-700 sm:leading-6">{pack.bestFor}</p>
-<div className="mt-2 flex flex-wrap gap-1.5">{safeArray(pack.quickTags).map((tag) => <span key={tag} className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-black text-blue-950 ring-1 ring-blue-100">{tag}</span>)}</div>
+<p className="mt-1 max-w-3xl text-sm font-bold leading-5 text-slate-700 sm:leading-6">{shownPack.bestFor}</p>
+<div className="mt-2 flex flex-wrap gap-1.5">{safeArray(shownPack.quickTags).slice(0, 3).map((tag) => <span key={tag} className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-black text-blue-950 ring-1 ring-blue-100">{tag}</span>)}</div>
 </div>
 <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[38rem]">
-<PrepButton onClick={() => copyText(packToText(pack), t(language, 'prepPackCopied', 'Prep pack copied.'))} icon={Copy}>{t(language, 'copyPrepPack', 'Copy prep pack')}</PrepButton>
-<PrepButton onClick={() => copyText(checklistToText(pack), t(language, 'officerChecklistCopied', 'Officer checklist copied.'))} variant="light" icon={ClipboardCheck}>{t(language, 'copyOfficerChecklist', 'Copy officer checklist')}</PrepButton>
+<PrepButton onClick={() => copyText(packToText(shownPack), t(language, 'prepPackCopied', 'Prep pack copied.'))} icon={Copy}>{t(language, 'copyPrepPack', 'Copy prep pack')}</PrepButton>
+<PrepButton onClick={() => copyText(checklistToText(shownPack), t(language, 'officerChecklistCopied', 'Officer checklist copied.'))} variant="light" icon={ClipboardCheck}>{t(language, 'copyOfficerChecklist', 'Copy officer checklist')}</PrepButton>
 <PrepButton href={PORTAL_LINKS.officialGuidelines} variant="light" icon={ExternalLink}>{t(language, 'openOfficialHosaGuidelines', 'Open official HOSA guidelines')}</PrepButton>
 </div>
 </div>
@@ -245,10 +260,10 @@ function PrepPackPage({ pack, onBack, language }) {
 <nav className="grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Prep pack sections">
 {PREP_SECTIONS.map((section) => <PrepSectionButton key={section.id} active={activeSection === section.id} onClick={() => setActiveSection(section.id)}>{prepText(language, section.label)}</PrepSectionButton>)}
 </nav>
-{activeSection === 'plan' && <PlanSection pack={pack} language={language} />}
+{activeSection === 'plan' && <PlanSection pack={shownPack} language={language} />}
 {activeSection === 'resources' && <ResourcesSection resourceGroups={resourceGroups} showAllResources={showAllResources} setShowAllResources={setShowAllResources} language={language} />}
-{activeSection === 'proof' && <ProofSection pack={pack} language={language} />}
-{activeSection === 'mock' && <MockWatchSection pack={pack} language={language} />}
+{activeSection === 'proof' && <ProofSection pack={shownPack} language={language} />}
+{activeSection === 'mock' && <MockWatchSection pack={shownPack} language={language} />}
 </div>
 }
 
@@ -299,5 +314,5 @@ export function PrepHub({ language }) {
 
   if (selectedPack) return <PrepPackPage pack={selectedPack} onBack={closePack} language={language} />
 
-  return <div className="space-y-4 sm:space-y-5"><section className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:p-5"><div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between"><div><div className="flex items-center gap-3"><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-950 sm:h-11 sm:w-11"><BookOpen size={21} /></div><div><h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">{t(language, 'prepHub', 'Prep Hub')}</h2><p className="mt-0.5 max-w-3xl text-sm leading-5 text-slate-600 sm:leading-6">{t(language, 'prepHubSubtitle', 'Free practice packs, source links, and officer checklists for HOSA event prep.')}</p></div></div><div className="mt-3 rounded-xl bg-amber-50 p-2.5 text-xs font-bold leading-5 text-amber-950 ring-1 ring-amber-200 sm:p-3 sm:text-sm sm:leading-6">{t(language, 'prepHubDisclaimer', 'These are unofficial Wheeler HOSA prep supports. Always verify official HOSA guidelines and Georgia SLC requirements with the Wheeler advisor.')}</div></div><div className="grid gap-2 sm:grid-cols-2 lg:min-w-[28rem]"><label className="block"><span className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-600">{t(language, 'searchPacks', 'Search packs')}</span><div className="relative"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t(language, 'searchPacks', 'Search packs')} className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm outline-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-300 sm:h-11" /></div></label><label className="block"><span className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-600">{t(language, 'filterByType', 'Filter by type')}</span><select value={category} onChange={(event) => setCategory(event.target.value)} className="h-10 w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 outline-none transition hover:border-blue-300 hover:bg-blue-50 focus:ring-2 focus:ring-blue-300 sm:h-11">{PACK_FILTERS.map((filter) => <option key={filter} value={filter}>{t(language, filter, filter)}</option>)}</select></label></div></div></section><section className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{filteredPacks.map((pack) => <PrepPackCard key={pack.slug} pack={pack} onOpen={openPack} language={language} />)}</section></div>
+  return <div className="space-y-4 sm:space-y-5"><section className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:p-5"><div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between"><div><div className="flex items-center gap-3"><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-950 sm:h-11 sm:w-11"><BookOpen size={21} /></div><div><h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">{t(language, 'prepHub', 'Prep Hub')}</h2><p className="mt-0.5 max-w-3xl text-sm leading-5 text-slate-600 sm:leading-6">{t(language, 'prepHubSubtitle', 'Free practice packs, source links, and officer checklists for HOSA event prep.')}</p></div></div><div className="mt-3 rounded-xl bg-amber-50 p-2.5 text-xs font-bold leading-5 text-amber-950 ring-1 ring-amber-200 sm:p-3 sm:text-sm sm:leading-6">{prepText(language, SHORT_OFFICIAL_REMINDER)}</div></div><div className="grid gap-2 sm:grid-cols-2 lg:min-w-[28rem]"><label className="block"><span className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-600">{t(language, 'searchPacks', 'Search packs')}</span><div className="relative"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t(language, 'searchPacks', 'Search packs')} className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm outline-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-300 sm:h-11" /></div></label><label className="block"><span className="mb-1 block text-xs font-black uppercase tracking-wide text-slate-600">{t(language, 'filterByType', 'Filter by type')}</span><select value={category} onChange={(event) => setCategory(event.target.value)} className="h-10 w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 outline-none transition hover:border-blue-300 hover:bg-blue-50 focus:ring-2 focus:ring-blue-300 sm:h-11">{PACK_FILTERS.map((filter) => <option key={filter} value={filter}>{t(language, filter, filter)}</option>)}</select></label></div></div></section><section className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{filteredPacks.map((pack) => <PrepPackCard key={pack.slug} pack={pack} onOpen={openPack} language={language} />)}</section></div>
 }
