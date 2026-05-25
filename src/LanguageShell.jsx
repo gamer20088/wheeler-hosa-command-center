@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { LANGUAGE_STORAGE_KEY, readLanguage, translateVisibleText } from './i18n.js'
+import { applySpanishEventLibraryPatches } from './spanishEventLibraryPatches.js'
 import { applySpanishTextPatches } from './spanishTextPatcher.js'
 
 function cx(...classes) {
@@ -24,6 +25,7 @@ export function LanguageShell({ children }) {
     const runTranslation = () => {
       translateVisibleText(language, root)
       applySpanishTextPatches(root)
+      applySpanishEventLibraryPatches(root)
     }
     window.setTimeout(runTranslation, 0)
     if (language !== 'es' || !root) return undefined
