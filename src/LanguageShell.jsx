@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { LANGUAGE_STORAGE_KEY, readLanguage, translateVisibleText } from './i18n.js'
+import { applySpanishTextPatches } from './spanishTextPatcher.js'
 
 function cx(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -20,7 +21,10 @@ export function LanguageShell({ children }) {
 
   useEffect(() => {
     const root = document.getElementById('root')
-    const runTranslation = () => translateVisibleText(language, root)
+    const runTranslation = () => {
+      translateVisibleText(language, root)
+      applySpanishTextPatches(root)
+    }
     window.setTimeout(runTranslation, 0)
     if (language !== 'es' || !root) return undefined
     const observer = new MutationObserver(runTranslation)
