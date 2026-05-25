@@ -34,14 +34,14 @@ const TEXT = {
   },
   es: {
     title: 'Bienvenido a Wheeler HOSA',
-    subtitle: 'Usa este portal para escoger un evento, abrir recursos y registrar practica.',
+    subtitle: 'Usa este portal para escoger un evento, abrir recursos y registrar práctica.',
     close: 'Cerrar',
     doNotShowAgain: 'No mostrar otra vez',
     start: 'Empezar con el buscador',
     steps: {
       find: ['Encuentra tu evento', 'Haz el quiz o revisa todos los eventos.'],
-      prep: ['Abre el Centro de preparacion', 'Usa paquetes, recursos y listas de revision.'],
-      proof: ['Practica y entrega evidencia', 'Usa el temporizador y guarda notas de practica.'],
+      prep: ['Abre tu paquete', 'Usa recursos, tareas y listas de revisión.'],
+      proof: ['Practica y entrega evidencia', 'Usa el temporizador y guarda notas.'],
     },
   },
 }
