@@ -27,21 +27,21 @@ const TEXT = {
     doNotShowAgain: 'Do not show again',
     start: 'Start with Find Event',
     steps: {
-      find: ['Find Event', 'Take the quick quiz or browse all events.'],
+      find: ['Find Event', 'Take the quick quiz to choose a realistic event.'],
       prep: ['Open Prep Hub', 'Use free prep packs, resources, and checklists.'],
       proof: ['Practice and submit proof', 'Use the timer, save practice notes, and submit weekly evidence.'],
     },
   },
   es: {
     title: 'Bienvenido a Wheeler HOSA',
-    subtitle: 'Usa este portal para escoger un evento, abrir recursos de preparacion y registrar practica.',
+    subtitle: 'Usa este portal para escoger un evento, abrir recursos y registrar practica.',
     close: 'Cerrar',
     doNotShowAgain: 'No mostrar otra vez',
-    start: 'Empezar con Encontrar evento',
+    start: 'Empezar con el buscador',
     steps: {
-      find: ['Encontrar evento', 'Haz el cuestionario rapido o revisa todos los eventos.'],
-      prep: ['Abrir Centro de preparacion', 'Usa paquetes gratuitos de preparacion, recursos y listas de revision.'],
-      proof: ['Practica y entrega evidencia', 'Usa el temporizador, guarda notas de practica y entrega evidencia semanal.'],
+      find: ['Encuentra tu evento', 'Haz el quiz o revisa todos los eventos.'],
+      prep: ['Abre el Centro de preparacion', 'Usa paquetes, recursos y listas de revision.'],
+      proof: ['Practica y entrega evidencia', 'Usa el temporizador y guarda notas de practica.'],
     },
   },
 }
