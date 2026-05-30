@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, BookOpen, CheckCircle2, ClipboardCheck, Copy, ExternalLink, Search } from 'lucide-react'
 import { EVENT_PREP_PACKS } from './eventPrepPacks.js'
 import { getResourcesForPack } from './prepResourceLinks.js'
+import { getResourceGuideForPack } from './prepResourceGuides.js'
 import { getSpanishPackCopy, getSpanishResource } from './spanishPrepCopy.js'
 import { PORTAL_LINKS } from './portalConfig.js'
 import { t } from './i18n.js'
@@ -11,16 +12,29 @@ const RESOURCE_GROUP_ORDER = ['Official Rules', 'Learn', 'Practice', 'Research',
 const RESOURCE_TYPE_LABELS_ES = {
   'Official Rules': 'Reglas oficiales',
   Learn: 'Aprender',
-  Practice: 'Practica',
-  Research: 'Investigacion',
+  Practice: 'Pr\u00e1ctica',
+  Research: 'Investigaci\u00f3n',
   Examples: 'Ejemplos',
   Career: 'Carrera',
-  'Spanish-Friendly': 'En espanol',
+  'Spanish-Friendly': 'En espa\u00f1ol',
 }
 const RESOURCE_LINK_NOTE = 'Links open outside this portal. Use them for study, examples, and background. Always verify official HOSA rules separately.'
 const RESOURCE_LINK_NOTE_ES = 'Los enlaces abren fuera del portal. Usalos para estudiar y buscar ejemplos. Verifica las reglas oficiales aparte.'
 const RESOURCE_HELPER = 'Start with a Learn source. Use Research links when you need stronger evidence.'
-const RESOURCE_HELPER_ES = 'Empieza con Aprender. Usa Investigacion si necesitas evidencia mas fuerte.'
+const RESOURCE_HELPER_ES = 'Empieza con Aprender. Usa Investigaci\u00f3n si necesitas evidencia m\u00e1s fuerte.'
+const RESOURCE_GUIDE_NOTE = 'Start here before opening every link. These are shortcuts, not official rules.'
+const RESOURCE_GUIDE_NOTE_ES = 'Empieza aqu\u00ed antes de abrir todos los enlaces. Son atajos, no reglas oficiales.'
+const RESOURCE_GUIDE_LABELS_ES = {
+  'Use these first': 'Usa esto primero',
+  'Practice drills': 'Ejercicios de pr\u00e1ctica',
+  'Smart searches': 'B\u00fasquedas \u00fatiles',
+  'Avoid wasting time on': 'No pierdas tiempo en',
+  'Copy search': 'Copiar b\u00fasqueda',
+  'First click': 'Primer enlace',
+  'Best study source': 'Mejor fuente de estudio',
+  'Best evidence source': 'Mejor fuente de evidencia',
+  Action: 'Acci\u00f3n',
+}
 const PREP_SECTIONS = [
   { id: 'plan', label: 'Plan' },
   { id: 'resources', label: 'Resources' },
@@ -32,7 +46,7 @@ const PREP_DENSITY_LABELS_ES = {
   Plan: 'Plan',
   Resources: 'Recursos',
   Proof: 'Evidencia',
-  'Mock + Watch Outs': 'Practica + cuidados',
+  'Mock + Watch Outs': 'Pr\u00e1ctica + cuidados',
   'Show all resources': 'Mostrar todos los recursos',
   'Show fewer resources': 'Mostrar menos recursos',
   'Save this': 'Guarda esto',
@@ -60,6 +74,11 @@ function resourceTypeLabel(language, type) {
 function prepText(language, value) {
   if (language === 'es' && PREP_DENSITY_LABELS_ES[value]) return PREP_DENSITY_LABELS_ES[value]
   return t(language, value, value)
+}
+
+function guideText(language, value) {
+  if (language === 'es' && RESOURCE_GUIDE_LABELS_ES[value]) return RESOURCE_GUIDE_LABELS_ES[value]
+  return value
 }
 
 function displayPack(pack, language) {
@@ -106,6 +125,36 @@ function ResourceCard({ resource, language }) {
   return <a href={resource.url} target="_blank" rel="noreferrer" className="relative block cursor-pointer rounded-xl bg-slate-50 p-2.5 pr-8 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300 sm:p-3 sm:pr-9">{content}</a>
 }
 
+function GuideFirstClickCard({ resource, language }) {
+  const isLocalNote = resource.url === '#'
+  const content = <><span className="flex items-start justify-between gap-2 text-sm font-black text-slate-950"><span>{resource.label}</span><span className="inline-flex shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-black text-blue-950 ring-1 ring-blue-100">{resourceTypeLabel(language, resource.type || 'Learn')}</span></span><span className="mt-1 line-clamp-2 block text-xs font-bold leading-5 text-slate-600 sm:text-sm">{resource.why}</span>{resource.action && <span className="mt-2 block rounded-lg bg-white px-2 py-1.5 text-xs font-bold leading-5 text-blue-950 ring-1 ring-blue-100"><span className="font-black">{guideText(language, 'Action')}:</span> {resource.action}</span>}{!isLocalNote && <ExternalLink size={14} className="absolute right-2.5 bottom-2.5 text-blue-950" />}</>
+  if (isLocalNote) return <div className="relative rounded-xl bg-slate-50 p-2.5 ring-1 ring-slate-200 sm:p-3">{content}</div>
+  return <a href={resource.url} target="_blank" rel="noreferrer" className="relative block cursor-pointer rounded-xl bg-slate-50 p-2.5 pr-8 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:ring-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300 sm:p-3 sm:pr-9">{content}</a>
+}
+
+function ResourceGuideSection({ guide, language }) {
+  if (!guide) return null
+  return <div className="space-y-4">
+    <p className="rounded-xl bg-blue-50 p-3 text-xs font-bold leading-5 text-blue-950 ring-1 ring-blue-100">{language === 'es' ? RESOURCE_GUIDE_NOTE_ES : RESOURCE_GUIDE_NOTE}</p>
+    <div>
+      <h4 className="mb-2 text-xs font-black uppercase tracking-wide text-rose-900">{guideText(language, 'Use these first')}</h4>
+      <div className="grid gap-2 lg:grid-cols-2">{safeArray(guide.firstClicks).map((resource) => <GuideFirstClickCard key={`${resource.label}-${resource.url}`} resource={resource} language={language} />)}</div>
+    </div>
+    <div>
+      <h4 className="mb-2 text-xs font-black uppercase tracking-wide text-rose-900">{guideText(language, 'Practice drills')}</h4>
+      <div className="grid gap-2 lg:grid-cols-2">{safeArray(guide.practiceDrills).map((drillItem) => <div key={drillItem.title} className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200"><div className="flex flex-wrap items-start justify-between gap-2"><p className="text-sm font-black text-slate-950">{drillItem.title}</p><span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-rose-900 ring-1 ring-slate-200">{drillItem.time}</span></div><div className="mt-2"><BulletList items={drillItem.steps} compact /></div></div>)}</div>
+    </div>
+    <div>
+      <h4 className="mb-2 text-xs font-black uppercase tracking-wide text-rose-900">{guideText(language, 'Smart searches')}</h4>
+      <div className="grid gap-2 lg:grid-cols-2">{safeArray(guide.searchPrompts).map((prompt) => <div key={`${prompt.label}-${prompt.query}`} className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200"><p className="text-sm font-black text-slate-950">{prompt.label}</p><p className="mt-1 rounded-lg bg-white px-2 py-1.5 text-xs font-bold leading-5 text-slate-700 ring-1 ring-slate-200">{prompt.query}</p><p className="mt-1.5 text-xs font-bold leading-5 text-slate-600">{prompt.why}</p><button type="button" onClick={() => copyText(prompt.query, t(language, 'searchCopied', 'Search copied.'))} className="mt-2 inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-xl bg-white px-3 py-1.5 text-xs font-black text-blue-950 ring-1 ring-blue-200 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300"><Copy size={14} />{guideText(language, 'Copy search')}</button></div>)}</div>
+    </div>
+    <div className="rounded-xl bg-amber-50 p-3 ring-1 ring-amber-200">
+      <h4 className="text-xs font-black uppercase tracking-wide text-amber-950">{guideText(language, 'Avoid wasting time on')}</h4>
+      <div className="mt-2"><BulletList items={guide.avoidList} compact /></div>
+    </div>
+  </div>
+}
+
 function PrepSectionButton({ active, children, onClick }) {
   return <button type="button" onClick={onClick} className={cx('min-h-10 cursor-pointer rounded-xl px-2.5 py-2 text-xs font-black transition focus:outline-none focus:ring-2 focus:ring-blue-300 sm:px-3 sm:text-sm', active ? 'bg-blue-950 text-white shadow-sm' : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-blue-50 hover:ring-blue-300')}>{children}</button>
 }
@@ -131,19 +180,22 @@ function PlanSection({ pack, language }) {
   </PanelCard>
 }
 
-function ResourcesSection({ resourceGroups, showAllResources, setShowAllResources, language }) {
+function ResourcesSection({ resourceGroups, resourceGuide, showAllResources, setShowAllResources, language }) {
   const flatResources = resourceGroups.flatMap(([, resources]) => resources)
-  const visibleResources = showAllResources ? flatResources : flatResources.slice(0, 5)
+  const visibleResources = resourceGuide && !showAllResources ? [] : showAllResources ? flatResources : flatResources.slice(0, 5)
   const visibleGroups = groupResources(visibleResources)
-  const hasMoreResources = flatResources.length > 5
+  const hasMoreResources = resourceGuide ? flatResources.length > 0 : flatResources.length > 5
   return <PanelCard title={prepText(language, 'Resources')}>
-    <p className="mb-3 rounded-xl bg-blue-50 p-3 text-xs font-bold leading-5 text-blue-950 ring-1 ring-blue-100">{language === 'es' ? RESOURCE_HELPER_ES : RESOURCE_HELPER}</p>
-    <div className="space-y-3">{visibleGroups.map(([type, resources]) => <div key={type}>
+    {resourceGuide ? <ResourceGuideSection guide={resourceGuide} language={language} /> : <p className="mb-3 rounded-xl bg-blue-50 p-3 text-xs font-bold leading-5 text-blue-950 ring-1 ring-blue-100">{language === 'es' ? RESOURCE_HELPER_ES : RESOURCE_HELPER}</p>}
+    <div className={resourceGuide ? 'mt-4 border-t border-slate-200 pt-4' : ''}>
+      {resourceGuide && <><h4 className="text-xs font-black uppercase tracking-wide text-rose-900">{t(language, 'freeResources', 'Free Resources')}</h4>{!showAllResources && <p className="mt-1 text-xs font-bold leading-5 text-slate-600">{language === 'es' ? RESOURCE_LINK_NOTE_ES : RESOURCE_LINK_NOTE}</p>}</>}
+      <div className="space-y-3">{visibleGroups.map(([type, resources]) => <div key={type}>
       <h4 className="mb-2 text-xs font-black uppercase tracking-wide text-rose-900">{resourceTypeLabel(language, type)}</h4>
       <div className="grid gap-2 lg:grid-cols-2">{resources.map((resource) => <ResourceCard key={`${resource.label}-${resource.url}`} resource={resource} language={language} />)}</div>
     </div>)}</div>
-    {hasMoreResources && <button type="button" onClick={() => setShowAllResources((current) => !current)} className="mt-4 inline-flex cursor-pointer rounded-xl bg-white px-3 py-2 text-sm font-black text-blue-950 ring-1 ring-blue-200 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300">{prepText(language, showAllResources ? 'Show fewer resources' : 'Show all resources')}</button>}
-    <p className="mt-4 rounded-xl bg-blue-50 p-3 text-xs font-bold leading-5 text-blue-950 ring-1 ring-blue-100">{language === 'es' ? RESOURCE_LINK_NOTE_ES : RESOURCE_LINK_NOTE}</p>
+      {hasMoreResources && <button type="button" onClick={() => setShowAllResources((current) => !current)} className="mt-4 inline-flex cursor-pointer rounded-xl bg-white px-3 py-2 text-sm font-black text-blue-950 ring-1 ring-blue-200 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300">{prepText(language, showAllResources ? 'Show fewer resources' : 'Show all resources')}</button>}
+      {(!resourceGuide || showAllResources) && <p className="mt-4 rounded-xl bg-blue-50 p-3 text-xs font-bold leading-5 text-blue-950 ring-1 ring-blue-100">{language === 'es' ? RESOURCE_LINK_NOTE_ES : RESOURCE_LINK_NOTE}</p>}
+    </div>
   </PanelCard>
 }
 
@@ -173,6 +225,21 @@ function MockWatchSection({ pack, language }) {
 
 function packToText(pack) {
   const resources = getResourcesForPack(pack)
+  const resourceGuide = getResourceGuideForPack(pack)
+  const guideLines = resourceGuide ? [
+    'Use these first:',
+    ...safeArray(resourceGuide.firstClicks).map((resource) => `- ${resource.label}: ${resource.url} (${resource.why}) Action: ${resource.action}`),
+    '',
+    'Practice drills:',
+    ...safeArray(resourceGuide.practiceDrills).flatMap((drillItem) => [`- ${drillItem.title} (${drillItem.time})`, ...safeArray(drillItem.steps).map((step) => `  - ${step}`)]),
+    '',
+    'Smart searches:',
+    ...safeArray(resourceGuide.searchPrompts).map((prompt) => `- ${prompt.label}: ${prompt.query} (${prompt.why})`),
+    '',
+    'Avoid wasting time:',
+    ...safeArray(resourceGuide.avoidList).map((item) => `- ${item}`),
+    '',
+  ] : []
   const lines = [
     `${pack.eventName} Prep Pack`,
     `Type: ${pack.packType}`,
@@ -190,6 +257,7 @@ function packToText(pack) {
     'Practice Tasks:',
     ...safeArray(pack.practiceTasks).map((item) => `- ${item}`),
     '',
+    ...guideLines,
     'Free Resources:',
     ...safeArray(resources).map((resource) => `- ${resource.label}: ${resource.url} (${resource.why})`),
     '',
@@ -231,6 +299,7 @@ function PrepPackPage({ pack, onBack, language }) {
   const [showAllResources, setShowAllResources] = useState(false)
   const shownPack = displayPack(pack, language)
   const resourceGroups = groupResources(displayResources(pack, language))
+  const resourceGuide = getResourceGuideForPack(pack)
 
   useEffect(() => {
     setActiveSection('plan')
@@ -261,7 +330,7 @@ function PrepPackPage({ pack, onBack, language }) {
 {PREP_SECTIONS.map((section) => <PrepSectionButton key={section.id} active={activeSection === section.id} onClick={() => setActiveSection(section.id)}>{prepText(language, section.label)}</PrepSectionButton>)}
 </nav>
 {activeSection === 'plan' && <PlanSection pack={shownPack} language={language} />}
-{activeSection === 'resources' && <ResourcesSection resourceGroups={resourceGroups} showAllResources={showAllResources} setShowAllResources={setShowAllResources} language={language} />}
+{activeSection === 'resources' && <ResourcesSection resourceGroups={resourceGroups} resourceGuide={resourceGuide} showAllResources={showAllResources} setShowAllResources={setShowAllResources} language={language} />}
 {activeSection === 'proof' && <ProofSection pack={shownPack} language={language} />}
 {activeSection === 'mock' && <MockWatchSection pack={shownPack} language={language} />}
 </div>
